@@ -1,5 +1,5 @@
 /*!
- * Copyright 2010 - 2015 Pentaho Corporation.  All rights reserved.
+ * Copyright 2010 - 2016 Pentaho Corporation.  All rights reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -23,7 +23,6 @@ define([ 'cdf/lib/jquery', 'dijit/registry', 'common-ui/prompting/components/Doj
     describe("clear", function() {
       var comp;
       var dijitElement = jasmine.createSpyObj("dijitElement", [ "destroyRecursive" ]);
-      var changeHandler = jasmine.createSpyObj("changeHandler", [ "remove" ]);
       beforeEach(function() {
         comp = new DojoDateTextBoxComponent();
       });
@@ -43,19 +42,6 @@ define([ 'cdf/lib/jquery', 'dijit/registry', 'common-ui/prompting/components/Doj
         comp.clear();
 
         expect(comp.dijitId).toBeDefined();
-        expect(registry.byId).toHaveBeenCalledWith(dijitId);
-        expect(dijitElement.destroyRecursive).toHaveBeenCalled();
-      });
-
-      it("should destroy element and remove change handler", function() {
-        spyOn(registry, "byId").and.returnValue(dijitElement);
-        var dijitId = "test_id";
-        comp.dijitId = dijitId;
-        comp.onChangeHandle = changeHandler;
-
-        comp.clear();
-
-        expect(changeHandler.remove).toHaveBeenCalled();
         expect(registry.byId).toHaveBeenCalledWith(dijitId);
         expect(dijitElement.destroyRecursive).toHaveBeenCalled();
       });
@@ -106,7 +92,7 @@ define([ 'cdf/lib/jquery', 'dijit/registry', 'common-ui/prompting/components/Doj
 
       it("should init date text box with undefined param", function() {
         comp.update();
-        
+
         expect(dashboard.getParameterValue).toHaveBeenCalledWith(testParam);
         expect(transportFormatter.parse).not.toHaveBeenCalled();
         expect(comp.dijitId).toBe(testId + '_input');

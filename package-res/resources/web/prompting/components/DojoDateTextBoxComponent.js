@@ -1,5 +1,5 @@
 /*!
- * Copyright 2010 - 2015 Pentaho Corporation.  All rights reserved.
+ * Copyright 2010 - 2016 Pentaho Corporation.  All rights reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -66,10 +66,7 @@ define(['cdf/components/BaseComponent', "dojo/date/locale", 'dijit/form/DateText
          * @method
          * @name DojoDateTextBoxComponent#clear
          */
-        clear: function () { 
-          if(this.onChangeHandle) {
-            this.onChangeHandle.remove();
-          }
+        clear: function () {
           var object = registry.byId(this.dijitId);
           if(object) {
             object.destroyRecursive();
@@ -99,7 +96,7 @@ define(['cdf/components/BaseComponent', "dojo/date/locale", 'dijit/form/DateText
          */
         update: function () {
           if(this.dijitId == undefined) {
-            this.dijitId = this.htmlObject + '_input'; 
+            this.dijitId = this.htmlObject + '_input';
           }
 
           this.clear();
@@ -148,6 +145,7 @@ define(['cdf/components/BaseComponent', "dojo/date/locale", 'dijit/form/DateText
           var dateTextBox = new DateTextBox({
             name: this.name,
             constraints: constraints,
+            value: value,
             onChange: function() {
               myself.dashboard.processChange(myself.name);
             }
@@ -156,7 +154,6 @@ define(['cdf/components/BaseComponent', "dojo/date/locale", 'dijit/form/DateText
           if(this._getDateFormat().match(/(^|(?!y).)(y{2}(?!y))/)) {
             dateTextBox.constraints.fullYear = false;
           }
-          dateTextBox.set('value', value);
 
           this._doAutoFocus();
         },
