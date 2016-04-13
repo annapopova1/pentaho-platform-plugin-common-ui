@@ -1,5 +1,5 @@
 /*!
-* Copyright 2010 - 2013 Pentaho Corporation.  All rights reserved.
+* Copyright 2010 - 2016 Pentaho Corporation.  All rights reserved.
 *
 * Licensed under the Apache License, Version 2.0 (the "License");
 * you may not use this file except in compliance with the License.
@@ -19,9 +19,9 @@ define(["dojo/_base/declare", "dijit/_WidgetBase", "dijit/_TemplatedMixin", "dij
   "pentaho/common/DateTextBox",
   'pentaho/common/Dialog',
   'pentaho/common/MessageBox', "dojo/text!pentaho/common/FilterDialog.html", "pentaho/common/Messages", "dojo/date/stamp",
-"dijit/form/MultiSelect"],
+"dijit/form/MultiSelect", "dojo/keys"],
     function(declare, _WidgetBase, _TemplatedMixin, _WidgetsInTemplateMixin, construct, on, query, lang, domClass, array, Calendar, DateTextBox, Dialog, MessageBox, templateStr, Messages, stamp,
-             MultiSelect){
+             MultiSelect, keys) {
       return declare("pentaho.common.FilterDialog",[Dialog,_TemplatedMixin, _WidgetsInTemplateMixin],
 {
   templateString: templateStr,
@@ -61,10 +61,10 @@ define(["dojo/_base/declare", "dijit/_WidgetBase", "dijit/_TemplatedMixin", "dij
     on(this.typePicklistCombinationTypeLinksExcludeLink, "click", this, function() {
       this._setPicklistCombinationTypeLink(pentaho.pda.Column.OPERATOR_TYPES.AND_NOT);
     });
-    
+
     this.picklistCombinationTypeIncludeOption.setAttribute("value", pentaho.pda.Column.OPERATOR_TYPES.AND);
     this.picklistCombinationTypeExcludeOption.setAttribute("value", pentaho.pda.Column.OPERATOR_TYPES.AND_NOT);
-    
+
     this.callbacks = [lang.hitch(this, this.save), lang.hitch(this, this.cancel)];
 
     this.errorDialog.setButtons([this.getLocaleString('Ok_txt')]);
@@ -76,7 +76,7 @@ define(["dojo/_base/declare", "dijit/_WidgetBase", "dijit/_TemplatedMixin", "dij
   _createNumericFormatRegex: function(pattern) {
     return new RegExp(pattern, 'g');
   },
-  
+
   setDecimalSeparator: function(s) {
     this._numericFormatRegex = this._createNumericFormatRegex('[^0-9' + s + ']');
   },
@@ -124,7 +124,7 @@ define(["dojo/_base/declare", "dijit/_WidgetBase", "dijit/_TemplatedMixin", "dij
     this.picklistLoaded = false;
 
     this.configureFilterTypesFor(this.currentColumn.dataType);
-    
+
     if (this.currentColumn.dataType === pentaho.pda.Column.DATA_TYPES.STRING && (this.currentFilter.combinationType != pentaho.pda.Column.OPERATOR_TYPES.AND || (this.currentFilter.value instanceof Array && this.currentFilter.value.length > 1))) {
       this.setFilterType("PICKLIST");
     } else {
@@ -135,7 +135,7 @@ define(["dojo/_base/declare", "dijit/_WidgetBase", "dijit/_TemplatedMixin", "dij
 
   /**
    * Register a callback function for checking if the filter can be saved at all or not.
-   * The function should accept the following parameters: 
+   * The function should accept the following parameters:
    *   dialog: this filter dialog
    *   filter: the current filter being edited
    *   saveCallback: the function to call if this filter should be saved
@@ -174,7 +174,7 @@ define(["dojo/_base/declare", "dijit/_WidgetBase", "dijit/_TemplatedMixin", "dij
   setSearchListLimit: function(limit) {
     this.searchListLimit = limit;
   },
-  
+
   enableFieldSelection: function(enable) {
     if(enable) {
         domClass.remove(this.fieldPicklistContainer, "filterDialogHidden");
@@ -185,7 +185,7 @@ define(["dojo/_base/declare", "dijit/_WidgetBase", "dijit/_TemplatedMixin", "dij
         domClass.add(this.fieldPicklistContainer, "filterDialogHidden");
     }
   },
-  
+
   setFieldList: function( fields ) {
         // populate the field list
         this.picklistFields.length = 0;
@@ -199,7 +199,7 @@ define(["dojo/_base/declare", "dijit/_WidgetBase", "dijit/_TemplatedMixin", "dij
 			list.options[list.length] = opt;
         }
   },
-  
+
   _fieldChanged: function() {
     var idx = this.picklistFields.selectedIndex;
     var field = this.fieldList[idx-1];
@@ -217,7 +217,7 @@ define(["dojo/_base/declare", "dijit/_WidgetBase", "dijit/_TemplatedMixin", "dij
     filter.value = [];
     this.configureFor(filter);
   },
-  
+
   configureFilterTypesFor: function(dataType) {
     // Hide options not applicable for this data type
     switch (dataType) {
@@ -285,7 +285,7 @@ define(["dojo/_base/declare", "dijit/_WidgetBase", "dijit/_TemplatedMixin", "dij
     }
     this.filterType = type;
   },
-  
+
   _initParameterUI: function() {
     // Find the parameter for this filter
     if (this.currentFilter.parameterName) {
@@ -389,7 +389,7 @@ define(["dojo/_base/declare", "dijit/_WidgetBase", "dijit/_TemplatedMixin", "dij
     var loadingMsg = this.getLocaleString("filterDialogPicklistLoadingMessage");
     this.picklistAvailableValues.containerNode.options[0] = new Option(loadingMsg, loadingMsg);
   },
-  
+
   _updatePicklistAvailableValues: function(values) {
     construct.empty(this.picklistAvailableValues.domNode);
     array.forEach(values, function (result, idx) {
@@ -446,7 +446,7 @@ define(["dojo/_base/declare", "dijit/_WidgetBase", "dijit/_TemplatedMixin", "dij
     this.currentFilter.combinationType = dojo.attr(this.picklistCombinationType, "value");
     return true;
   },
-  
+
   _picklistFindKeyPressed: function(event) {
     if (event.keyCode === keys.ENTER) {
       this._filterPicklistByFindInput();
@@ -472,14 +472,14 @@ define(["dojo/_base/declare", "dijit/_WidgetBase", "dijit/_TemplatedMixin", "dij
       }
     }));
   },
-  
+
   _setPicklistCombinationTypeLink: function(combinationType) {
     if (this.filterType != "PICKLIST") {
       this.setFilterType("PICKLIST");
     }
     this.picklistCombinationType.setAttribute("value", combinationType);
   },
-  
+
   // MATCH IMPL
   _isDateType: function() {
     return this.currentColumn.dataType === pentaho.pda.Column.DATA_TYPES.DATE;
@@ -626,7 +626,7 @@ define(["dojo/_base/declare", "dijit/_WidgetBase", "dijit/_TemplatedMixin", "dij
   _dateRangeComparatorChanged: function() {
     console.log("_dateRangeComparatorChanged() Not yet implemented");
   },
-  
+
   /**
    * Build the textual representation of a filter for display on the Filter Panel.
    * @param filter
