@@ -44,7 +44,7 @@
  */
 define(['cdf/lib/Base', '../components/SubmitPromptComponent', 'pentaho/common/Messages'],
     function (Base, SubmitPromptComponent, Messages) {
-    
+
       /*
        * Gets a message from the messages bundle.
        *
@@ -56,7 +56,7 @@ define(['cdf/lib/Base', '../components/SubmitPromptComponent', 'pentaho/common/M
        * to substitute into the message string.
        * @returns {String} The message that corresponds to the key.
        * @private
-       */  
+       */
       var _getMessage = function(key, substitutionVars) {
         return Messages.getString(key, substitutionVars);
       }
@@ -73,7 +73,7 @@ define(['cdf/lib/Base', '../components/SubmitPromptComponent', 'pentaho/common/M
          * @returns {SubmitPromptComponent} The new instance of SubmitPromptComponent
          */
         build: function (args) {
-          var guid = args.promptPanel.generateWidgetGUID();
+          var guid = args.renderEngine.generateWidgetGUID();
 
           return new SubmitPromptComponent({
             promptType: 'submit',
@@ -82,8 +82,8 @@ define(['cdf/lib/Base', '../components/SubmitPromptComponent', 'pentaho/common/M
             htmlObject: guid,
             label: _getMessage('submitButtonLabel', 'Submit'),
             autoSubmitLabel: _getMessage('autoSubmitLabel', 'Auto-Submit'),
-            promptPanel: args.promptPanel,
-            paramDefn: args.promptPanel.paramDefn,
+            renderEngine: args.renderEngine,
+            paramDefn: args.paramDefn,
             executeAtStart: true
           });
         }

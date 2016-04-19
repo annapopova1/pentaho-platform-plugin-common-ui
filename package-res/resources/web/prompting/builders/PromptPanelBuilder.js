@@ -19,17 +19,17 @@ define(['cdf/lib/Base', '../components/ScrollingPromptPanelLayoutComponent'],
     function (Base, ScrollingPromptPanelLayoutComponent) {
 
       return Base.extend({
-        build: function (promptPanel) {
+        build: function (args) {
 
-          var name = 'prompt' + promptPanel.guid;
+          var name = 'prompt' + args.renderEngine.guid;
           return new ScrollingPromptPanelLayoutComponent({
             name: name,
             type: 'ScrollingPromptPanelLayoutComponent',
-            htmlObject: promptPanel.destinationId,
-            promptPanel: promptPanel,
-            components: promptPanel.buildPanelComponents(),
+            htmlObject: args.renderEngine.destinationId,
+            renderEngine: args.renderEngine,
+            components: args.renderEngine._buildPanelComponents(args.paramDefn),
             postExecution: function () {
-              promptPanel._ready();
+              this.renderEngine._onReady();
             }
           });
         }

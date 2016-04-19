@@ -56,7 +56,7 @@ define(['cdf/lib/Base', '../components/FlowPromptLayoutComponent'],
          * @returns {FlowPromptLayoutComponent} The new instance of FlowPromptLayoutComponent
          */
         build: function (args) {
-          var guid = args.promptPanel.generateWidgetGUID();
+          var guid = args.renderEngine.generateWidgetGUID();
 
           return new FlowPromptLayoutComponent({
             type: 'FlowPromptLayoutComponent',
@@ -65,7 +65,7 @@ define(['cdf/lib/Base', '../components/FlowPromptLayoutComponent'],
             htmlObject: guid,
             executeAtStart: true,
             components: [
-              args.promptPanel.createWidgetForSubmitComponent()
+              args.renderEngine._createWidgetForSubmitComponent(args.paramDefn)
             ]
           });
         }

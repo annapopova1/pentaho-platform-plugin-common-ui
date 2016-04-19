@@ -68,7 +68,7 @@ define(['./ScopedPentahoButtonComponent', 'common-ui/jquery-clean'], function(Sc
 
       this.base();
 
-      var promptPanel = this.promptPanel;
+      var renderEngine = this.renderEngine;
 
       // BISERVER-3821 Provide ability to remove Auto-Submit check box from report viewer
       // only show the UI for the auto-submit check-box if no preference exists
@@ -76,19 +76,19 @@ define(['./ScopedPentahoButtonComponent', 'common-ui/jquery-clean'], function(Sc
       if (this.paramDefn.autoSubmit == undefined) {
         var checkBox = this._createElement('<label class="auto-complete-checkbox">' +
             '<input type="checkbox"' +
-            (promptPanel.getAutoSubmitSetting() ? ' checked="checked"' : '') +
+            (renderEngine.getAutoSubmit() ? ' checked="checked"' : '') +
             ' />' +
             this.autoSubmitLabel +
             '</label>');
 
         checkBox.appendTo($('#' + this.htmlObject))
                 .bind('click', function (ev) {
-                  promptPanel.setAutoSubmit(ev.target.checked);
+                  renderEngine.setAutoSubmit(ev.target.checked);
                 });
       }
 
       // BISERVER-6915 Should not request pagination when auto-submit is set to false
-      if (promptPanel.getAutoSubmitSetting()) {
+      if (renderEngine.getAutoSubmit()) {
         this.expression(/*isInit*/true);
       }
     },
@@ -113,17 +113,7 @@ define(['./ScopedPentahoButtonComponent', 'common-ui/jquery-clean'], function(Sc
      * @param {Boolean} isInit
      */
     expression: function (isInit) {
-      this.promptPanel._submit({isInit: isInit});
-    },
-
-    /**
-     * Called when the submit button is pressed to start submitting prompt panel.
-     *
-     * @name SubmitPromptComponent#expressionStart
-     * @method
-     */
-    expressionStart: function () {
-      this.promptPanel._submitStart();
+      this.renderEngine._onSubmit({isInit: isInit});
     }
   });
 

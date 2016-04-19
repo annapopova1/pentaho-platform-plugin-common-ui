@@ -188,7 +188,6 @@ define(['cdf/components/BaseComponent', "dojo/date/locale", 'dijit/form/DateText
           } else {
             return this.localeFormatter.format(date, {datePattern: this._getDateFormat(), selector: "date"});
           }
-          return date;
         },
 
         /**

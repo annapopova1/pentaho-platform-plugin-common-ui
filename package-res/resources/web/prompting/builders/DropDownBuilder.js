@@ -67,7 +67,7 @@ define(['cdf/components/SelectComponent', './ValueBasedParameterWidgetBuilder', 
     build: function(args) {
       var widget = this.base(args);
 
-      if (args.promptPanel.paramDefn.ignoreBiServer5538 && !args.param.hasSelection()) {
+      if (args.paramDefn.ignoreBiServer5538 && !args.param.hasSelection()) {
         // If there is no empty selection, and no value is selected, create one. This way, we can represent
         // the unselected state.
         widget.valuesArray = widget.valuesArray.concat([['', '']]);
@@ -79,7 +79,7 @@ define(['cdf/components/SelectComponent', './ValueBasedParameterWidgetBuilder', 
           // SelectComponent defines defaultIfEmpty = true for non-multi selects.
           // We can't override any properties of the component so we must set them just before update() is called. :(
           // Only select the first item if we have no selection and are not ignoring BISERVER-5538
-          this.defaultIfEmpty = !args.promptPanel.paramDefn.ignoreBiServer5538 && !args.param.hasSelection();
+          this.defaultIfEmpty = !args.paramDefn.ignoreBiServer5538 && !args.param.hasSelection();
         }
       });
 

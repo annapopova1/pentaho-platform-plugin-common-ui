@@ -35,7 +35,7 @@ define([], function() {
      *     api.ui.showProgressIndicator();
      */
     this.showProgressIndicator = function() {
-      api.operation._getPromptPanel().showProgressIndicator();
+      api.operation._getPromptService().showProgressIndicator();
     };
 
     /**
@@ -49,7 +49,7 @@ define([], function() {
      *     api.ui.hideProgressIndicator();
      */
     this.hideProgressIndicator = function() {
-      api.operation._getPromptPanel().hideProgressIndicator();
+      api.operation._getPromptService().hideProgressIndicator();
     };
 
     /**
@@ -85,7 +85,7 @@ define([], function() {
      *      api.ui.setBlockUiOptions(defaults);
      */
     this.setBlockUiOptions = function(options) {
-      api.operation._getPromptPanel().setBlockUiOptions(options);
+      api.operation._getPromptService().setBlockUiOptions(options);
     };
   };
 });

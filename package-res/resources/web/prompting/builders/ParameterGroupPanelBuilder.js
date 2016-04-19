@@ -29,8 +29,8 @@ define(['cdf/lib/Base', '../components/HorizontalTableBasedPromptLayoutComponent
     },
 
 
-    _lookupPromptType: function (paramDefn) {
-      switch (paramDefn.layout) {
+    _lookupPromptType: function (layout) {
+      switch (layout) {
         case 'horizontal':
           return this._layoutTypes.horizontal;
         case 'flow':
@@ -42,14 +42,14 @@ define(['cdf/lib/Base', '../components/HorizontalTableBasedPromptLayoutComponent
 
 
     build: function (args) {
-      var guid = args.promptPanel.generateWidgetGUID();
+      var guid = args.renderEngine.generateWidgetGUID();
       var label = undefined;
 
       var widget = {
-        type: this._lookupPromptType(args.promptPanel.paramDefn),
+        type: this._lookupPromptType(args.layout),
         name: args.paramGroup.name,
         htmlObject: guid,
-        promptPanel: args.promptPanel,
+        renderEngine: args.renderEngine,
         label: label,
         components: args.components,
         cssClass: 'parameter-wrapper'

@@ -33,7 +33,7 @@ define([], function() {
      *                              Pass null if you wish to unbind this event
      */
     this.beforeRender = function(callback) {
-      api.operation._getPromptPanel().onBeforeRender = callback;
+      api.operation._getPromptService().onBeforeRender = callback;
     };
 
     /**
@@ -45,7 +45,7 @@ define([], function() {
      *                              Pass null if you wish to unbind this event
      */
     this.afterRender = function(callback) {
-      api.operation._getPromptPanel().onAfterRender = callback;
+      api.operation._getPromptService().onAfterRender = callback;
     };
 
     /**
@@ -57,7 +57,7 @@ define([], function() {
      *                              Pass null if you wish to unbind this event
      */
     this.beforeUpdate = function(callback) {
-      api.operation._getPromptPanel().onBeforeUpdate = callback;
+      api.operation._getPromptService().onBeforeUpdate = callback;
     };
 
     /**
@@ -69,7 +69,7 @@ define([], function() {
      *                              Pass null if you wish to unbind this event
      */
     this.afterUpdate = function(callback) {
-      api.operation._getPromptPanel().onAfterUpdate = callback;
+      api.operation._getPromptService().onAfterUpdate = callback;
     };
 
     /**
@@ -96,13 +96,13 @@ define([], function() {
      */
     this.parameterChanged = function(callback, paramName) {
       if (callback) {
-        if (!api.operation._getPromptPanel().onParameterChanged) {
-          api.operation._getPromptPanel().onParameterChanged = {};
+        if (!api.operation._getPromptService().onParameterChanged) {
+          api.operation._getPromptService().onParameterChanged = {};
         }
         paramName = (typeof paramName === "string" && paramName) || '';
-        api.operation._getPromptPanel().onParameterChanged[paramName] = callback;
+        api.operation._getPromptService().onParameterChanged[paramName] = callback;
       } else {
-        api.operation._getPromptPanel().onParameterChanged = null;
+        api.operation._getPromptService().onParameterChanged = null;
       }
     };
 
@@ -119,7 +119,7 @@ define([], function() {
      * })
      */
     this.postInit = function(callback) {
-      api.operation._getPromptPanel().onPostInit(callback);
+      api.operation._getPromptService().onPostInit(callback);
     };
 
     /**
@@ -138,9 +138,9 @@ define([], function() {
      */
     this.ready = function(callback) {
       if(typeof callback === 'function') {
-        api.operation._getPromptPanel().ready = callback;
+        api.operation._getPromptService().ready = callback;
       } else {
-        api.operation._getPromptPanel().ready = function(){};
+        api.operation._getPromptService().ready = function(){};
       }
     };
 
@@ -167,11 +167,11 @@ define([], function() {
      *  });
      */
     this.stateChanged = function(callback) {
-      var promptPanel = api.operation._getPromptPanel();
+      var promptService = api.operation._getPromptService();
       if(typeof callback === 'function') {
-        promptPanel.onStateChanged = callback;
+        promptService.onStateChanged = callback;
       } else {
-        promptPanel.onStateChanged = null;
+        promptService.onStateChanged = null;
       }
     }
 
@@ -190,9 +190,9 @@ define([], function() {
      */
     this.submit = function(callback) {
       if(typeof callback === 'function') {
-        api.operation._getPromptPanel().onSubmit = callback;
+        api.operation._getPromptService().onSubmit = callback;
       } else {
-        api.operation._getPromptPanel().onSubmit = null;
+        api.operation._getPromptService().onSubmit = null;
       }
     };
   };

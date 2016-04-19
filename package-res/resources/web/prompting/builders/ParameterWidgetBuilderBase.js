@@ -52,7 +52,7 @@ define(['cdf/lib/Base', 'common-ui/jquery-clean'], function(Base, $) {
      * @returns {Object} The object extended with the CDF main properties
      */
     build: function (args) {
-      var guid = args.promptPanel.generateWidgetGUID();
+      var guid = args.renderEngine.generateWidgetGUID();
       return {
         promptType: 'prompt',
         executeAtStart: true,
@@ -60,7 +60,7 @@ define(['cdf/lib/Base', 'common-ui/jquery-clean'], function(Base, $) {
         name: guid,
         htmlObject: guid,
         type: undefined, // must be declared in extension class
-        parameter: args.promptPanel.getParameterName(args.param),
+        parameter: args.renderEngine.getParameterName(args.param),
         postExecution: function () {
           this.base();
           var tooltip = this.param.attributes['tooltip'];

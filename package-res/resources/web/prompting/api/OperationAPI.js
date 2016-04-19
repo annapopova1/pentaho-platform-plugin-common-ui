@@ -24,21 +24,21 @@
  * @property {PromptPanel} _promptPanel The prompting panel object
  * @property {Object} _msgs Contains possible constants of messages
  */
-define(['common-ui/prompting/PromptPanel'], function(PromptPanel) {
+define(['common-ui/prompting/PromptService'], function(PromptService) {
   return function(api, id) {
-    this._promptPanel = new PromptPanel(id);
+    this._promptService = new PromptService(id);
     this._msgs = {
       PROMPT_PANEL_NOT_FOUND: "Prompt Panel not found. Call 'api.operation.render' to create a panel.",
       NO_PARAM_DEFN: "'getParameterDefinitionCallback' function does not return a valid ParameterDefinition instance.",
       NO_PARAM_DEFN_FUNC: "No function defined for 'getParameterDefinitionCallback'. Prompts will not be refreshed."
     };
 
-    this._getPromptPanel = function() {
-      if (!this._promptPanel) { // Should never happen
+    this._getPromptService = function() {
+      if (!this._promptService) { // Should never happen
         api.log.error(this._msgs.PROMPT_PANEL_NOT_FOUND, true);
       }
 
-      return this._promptPanel;
+      return this._promptService;
     };
 
     /**
@@ -73,10 +73,10 @@ define(['common-ui/prompting/PromptPanel'], function(PromptPanel) {
           api.log.error(this._msgs.NO_PARAM_DEFN, true);
         }
 
-        this._promptPanel.setParamDefn(paramDefn);
+        this._promptService.setParamDefn(paramDefn);
 
         // Override of getParameterDefinition
-        this._promptPanel.getParameterDefinition = (function(promptPanel, refreshCallback) {
+        this._promptService.getParameterDefinition = (function(promptPanel, refreshCallback) {
           getParameterDefinitionCallback(api, (function(paramDefn) {
             if (!paramDefn) {
               api.log.error(this._msgs.NO_PARAM_DEFN);
@@ -98,7 +98,7 @@ define(['common-ui/prompting/PromptPanel'], function(PromptPanel) {
      */
     this.init = function() {
       try {
-        this._getPromptPanel().init();
+        this._getPromptService().init();
       } catch(e) {
         if (e.message.search("addComponent: duplicate component name") > -1) {
           api.log.warn("Prompt Panel has been initialized already");
@@ -118,7 +118,7 @@ define(['common-ui/prompting/PromptPanel'], function(PromptPanel) {
     this.getParameterValues = function() {
       var values;
       try {
-        values = this._getPromptPanel().getParameterValues();
+        values = this._getPromptService().getParameterValues();
       } catch(e) {
         api.log.error(e);
         values = {};
@@ -136,7 +136,7 @@ define(['common-ui/prompting/PromptPanel'], function(PromptPanel) {
      * @param {Object}    value The new value for the parameter
      */
     this.setParameterValue = function(param, value) {
-      this._getPromptPanel().setParameterValue(param, value);
+      this._getPromptService().setParameterValue(param, value);
     };
 
     /**
@@ -152,7 +152,7 @@ define(['common-ui/prompting/PromptPanel'], function(PromptPanel) {
      *     api.operation.refreshPrompt();
      */
     this.refreshPrompt = function(forceUpdate) {
-      this._getPromptPanel().refreshPrompt(forceUpdate);
+      this._getPromptService().refreshPrompt(forceUpdate);
     };
 
     /**
@@ -215,14 +215,14 @@ define(['common-ui/prompting/PromptPanel'], function(PromptPanel) {
     this.state = function(state) {
       if (state) {
         try {
-          this._getPromptPanel().setState(state);
+          this._getPromptService().setState(state);
         } catch(e) {
           api.log.error(e);
         }
       }
       var result;
       try {
-        result = this._getPromptPanel().getState();
+        result = this._getPromptService().getState();
       } catch(e) {
         api.log.error(e);
         result = {};
@@ -242,8 +242,8 @@ define(['common-ui/prompting/PromptPanel'], function(PromptPanel) {
      *      api.operation.submit(options);
      */
     this.submit = function(options) {
-      var promptPanel = this._getPromptPanel();
-      promptPanel.submit(promptPanel, options);
+      var promptService = this._getPromptService();
+      promptService.submit(promptService, options);
     };
   };
 });
