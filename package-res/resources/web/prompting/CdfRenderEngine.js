@@ -44,24 +44,34 @@ define(["dojo/_base/declare", "./IRenderEngine", './WidgetBuilder', 'cdf/Dashboa
         this.dashboard.init();
       },
 
-      updatePromptPanel: function(paramDefn) {
+      updatePromptPanel: function(paramDefn, diff, isForceRefresh) {
         this._initializePrivateProperties(paramDefn);
-        var layout = this.dashboard.getComponentByName("prompt" + this.guid);
-        this._processComponents(layout, true, function(component) {
-          this.dashboard.updateComponent(component);
-        });
-      },
 
-      removeComponentsByDiff: function(paramDefn, diff) {
-        this._removeComponentsByDiff(paramDefn, diff);
-      },
+        var toRemove = Object.keys(diff.toRemove).length > 0,
+          toAdd = Object.keys(diff.toAdd).length > 0,
+          toChangeData = Object.keys(diff.toChangeData).length > 0;
 
-      addComponentsByDiff: function(paramDefn, diff) {
-        this._addComponentsByDiff(paramDefn, diff);
-      },
+        // Determine if there are params which need to be removed
+        if (toRemove) {
+          this._removeComponentsByDiff(paramDefn, diff.toRemove);
+        }
 
-      changeComponentsByDiff: function(paramDefn, diff) {
-        this._changeComponentsByDiff(paramDefn, diff);
+        // Determine if there are params which need to be added
+        if (toAdd) {
+          this._addComponentsByDiff(paramDefn, diff.toAdd);
+        }
+
+        // Determine if there are params which need to be changed
+        if (toChangeData) {
+          this._changeComponentsByDiff(paramDefn, diff.toChangeData);
+        }
+
+        if (isForceRefresh) {
+          var layout = this.dashboard.getComponentByName("prompt" + this.guid);
+          this._processComponents(layout, true, function(component) {
+            this.dashboard.updateComponent(component);
+          });
+        }
       },
 
       showProgressIndicator: function() {

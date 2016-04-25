@@ -537,20 +537,7 @@ define(['cdf/lib/Base', 'cdf/Logger', 'dojo/number', 'dojo/i18n', 'common-ui/uti
           this.onBeforeRender();
         }
 
-        // Determine if there are params which need to be removed
-        if (toRemove) {
-          this.renderEngine._removeComponentsByDiff(this.getParamDefn(), diff.toRemove);
-        }
-
-        // Determine if there are params which need to be added
-        if (toAdd) {
-          this.renderEngine._addComponentsByDiff(this.getParamDefn(), diff.toAdd);
-        }
-
-        // Determine if there are params which need to be changed
-        if (toChangeData) {
-          this.renderEngine._changeComponentsByDiff(this.getParamDefn(), diff.toChangeData);
-        }
+        this.renderEngine.updatePromptPanel(this.getParamDefn(), this.diff, this.isForceRefresh);
 
         if ((toRemove || toAdd || toChangeData) && this.onAfterRender) {
           this.onAfterRender();
@@ -582,9 +569,6 @@ define(['cdf/lib/Base', 'cdf/Logger', 'dojo/number', 'dojo/i18n', 'common-ui/uti
           }
         } else if (this.diff) { // Perform update when there are differences
           this.update(this.diff);
-          if (this.isForceRefresh) {
-            this.renderEngine.updatePromptPanel(paramDefn);
-          }
         }
 
         this.diff = null;

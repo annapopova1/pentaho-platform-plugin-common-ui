@@ -111,19 +111,7 @@ define(["dojo/_base/declare", 'common-ui/util/GUIDHelper', 'common-ui/underscore
         throwAbstractClassError();
       },
 
-      updatePromptPanel: function(paramDefn) {
-        throwAbstractClassError();
-      },
-
-      removeComponentsByDiff: function(paramDefn, diff) {
-        throwAbstractClassError();
-      },
-
-      addComponentsByDiff: function(paramDefn, diff) {
-        throwAbstractClassError();
-      },
-
-      changeComponentsByDiff: function(paramDefn, diff) {
+      updatePromptPanel: function(paramDefn, diff, isForceRefresh) {
         throwAbstractClassError();
       },
 
