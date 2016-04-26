@@ -15,14 +15,14 @@
  *
  */
 
-define(["dojo/_base/declare", 'common-ui/util/GUIDHelper', 'common-ui/underscore'],
-  function(declare, GUIDHelper, _) {
+define(['cdf/lib/Base', 'common-ui/util/GUIDHelper', 'common-ui/underscore'],
+  function(Base, GUIDHelper, _) {
 
     function throwAbstractClassError() {
       throw new TypeError("Abstract class");
     }
 
-    return declare(null, {
+    return Base.extend({
 
       promptGUIDHelper: undefined,
       guid: undefined,

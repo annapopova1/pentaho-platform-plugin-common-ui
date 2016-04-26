@@ -15,14 +15,15 @@
  *
  */
 
-define(["dojo/_base/declare", "./IRenderEngine", './WidgetBuilder', 'cdf/Dashboard.Clean', 'cdf/Logger', 'common-ui/jquery-clean'],
-  function(declare, IRenderEngine, WidgetBuilder, Dashboard, Logger, $) {
-    return declare(IRenderEngine, {
+define(["./IRenderEngine", './WidgetBuilder', 'cdf/Dashboard.Clean', 'cdf/Logger', 'common-ui/jquery-clean'],
+  function(IRenderEngine, WidgetBuilder, Dashboard, Logger, $) {
+    return IRenderEngine.extend({
 
       dashboard: undefined,
       widgetBuilder: undefined,
 
       constructor: function(destinationId) {
+        this.base(destinationId);
         this.dashboard = new Dashboard();
         this.widgetBuilder = WidgetBuilder;
       },
