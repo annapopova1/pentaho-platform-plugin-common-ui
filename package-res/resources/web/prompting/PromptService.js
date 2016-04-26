@@ -15,10 +15,10 @@
  *
  */
 
-define(['cdf/lib/Base', 'cdf/Logger', 'dojo/number', 'dojo/i18n', 'common-ui/util/util', './parameters/ParameterDefinitionDiffer',
+define(['cdf/lib/Base', 'cdf/Logger', 'dojo/number', 'dojo/i18n', 'common-ui/util/util',
     'common-ui/jquery-clean', './CdfRenderEngine', 'pentaho/service!IRenderEngine?single'
   ],
-  function(Base, Logger, DojoNumber, i18n, Utils, ParamDiff, $, CdfRenderEngine, IRenderEngine) {
+  function(Base, Logger, DojoNumber, i18n, Utils, $, CdfRenderEngine, IRenderEngine) {
 
     var createRenderEngine = function(destinationId) {
       var renderEngine;
@@ -181,8 +181,6 @@ define(['cdf/lib/Base', 'cdf/Logger', 'dojo/number', 'dojo/i18n', 'common-ui/uti
         this.setParamDefn(paramDefn);
 
         this.renderEngine = createRenderEngine(destinationId);
-
-        this.paramDiffer = new ParamDiff();
 
         this.renderEngine.registerOnReady(this._ready.bind(this));
         this.renderEngine.registerOnSubmit(this._submit.bind(this));
@@ -425,14 +423,6 @@ define(['cdf/lib/Base', 'cdf/Logger', 'dojo/number', 'dojo/i18n', 'common-ui/uti
           }
         }
 
-        if (param.list && (!value || value == "" || value == "null")) {
-          if (!this.nullValueParams) {
-            this.nullValueParams = [];
-          }
-
-          this.nullValueParams.push(param);
-        }
-
         this._setTimeoutRefreshPrompt();
         this.parametersChanged = true;
 
@@ -514,10 +504,8 @@ define(['cdf/lib/Base', 'cdf/Logger', 'dojo/number', 'dojo/i18n', 'common-ui/uti
         }*/
 
         if (paramDefn) {
-          this.diff = this.paramDiffer.diff(this.getParamDefn(), paramDefn, this.nullValueParams);
           this.isRefresh = true;
           this.setParamDefn(paramDefn);
-          this.nullValueParams = null;
           this.init();
         }
       },
@@ -528,18 +516,14 @@ define(['cdf/lib/Base', 'cdf/Logger', 'dojo/number', 'dojo/i18n', 'common-ui/uti
        * @method update
        * @param {JSON} diff - contains the differences between the old and new parameter definitions produced by ParameterDefinitionDiffer.diff
        */
-      update: function(diff) {
-        var toRemove = Object.keys(diff.toRemove).length > 0,
-          toAdd = Object.keys(diff.toAdd).length > 0,
-          toChangeData = Object.keys(diff.toChangeData).length > 0;
-
-        if ((toRemove || toAdd || toChangeData) && this.onBeforeRender) {
+      update: function() {
+        if (this.onBeforeRender) {
           this.onBeforeRender();
         }
 
-        this.renderEngine.updatePromptPanel(this.getParamDefn(), this.diff, this.isForceRefresh);
+        this.renderEngine.updatePromptPanel(this.getParamDefn(), this.isForceRefresh);
 
-        if ((toRemove || toAdd || toChangeData) && this.onAfterRender) {
+        if (this.onAfterRender) {
           this.onAfterRender();
         }
       },
@@ -567,11 +551,10 @@ define(['cdf/lib/Base', 'cdf/Logger', 'dojo/number', 'dojo/i18n', 'common-ui/uti
           if (this.onAfterRender) {
             this.onAfterRender();
           }
-        } else if (this.diff) { // Perform update when there are differences
-          this.update(this.diff);
+        } else {
+          this.update();
         }
 
-        this.diff = null;
         this.isRefresh = null;
         this.isForceRefresh = undefined;
 

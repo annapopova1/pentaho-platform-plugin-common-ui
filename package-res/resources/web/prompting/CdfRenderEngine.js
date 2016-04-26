@@ -15,17 +15,21 @@
  *
  */
 
-define(["./IRenderEngine", './WidgetBuilder', 'cdf/Dashboard.Clean', 'cdf/Logger', 'common-ui/jquery-clean'],
-  function(IRenderEngine, WidgetBuilder, Dashboard, Logger, $) {
+define(["./IRenderEngine", './parameters/ParameterDefinitionDiffer', './WidgetBuilder', 'cdf/Dashboard.Clean', 'cdf/Logger', 'common-ui/jquery-clean'],
+  function(IRenderEngine, ParamDiff, WidgetBuilder, Dashboard, Logger, $) {
     return IRenderEngine.extend({
 
       dashboard: undefined,
       widgetBuilder: undefined,
+      paramDiffer: undefined,
+      nullValueParams: undefined,
 
       constructor: function(destinationId) {
         this.base(destinationId);
         this.dashboard = new Dashboard();
         this.widgetBuilder = WidgetBuilder;
+        this.paramDiffer = new ParamDiff();
+        this.nullValueParams = [];
       },
 
       getParameterValue: function(param) {
@@ -36,7 +40,8 @@ define(["./IRenderEngine", './WidgetBuilder', 'cdf/Dashboard.Clean', 'cdf/Logger
         this.dashboard.setParameter(this.getParameterName(param), value);
       },
 
-      createPromptPanel: function(paramDefn) {
+      createPromptPanel: function (paramDefn) {
+        this.prevParamDefn = paramDefn;
         this.promptGUIDHelper.reset();
         this._initializePrivateProperties(paramDefn);
         var layout = this._createWidgetForPromptPanel.call(this, paramDefn);
@@ -45,7 +50,11 @@ define(["./IRenderEngine", './WidgetBuilder', 'cdf/Dashboard.Clean', 'cdf/Logger
         this.dashboard.init();
       },
 
-      updatePromptPanel: function(paramDefn, diff, isForceRefresh) {
+      updatePromptPanel: function (paramDefn, isForceRefresh) {
+        var diff = this.paramDiffer.diff(this.prevParamDefn, paramDefn, this.nullValueParams);
+
+        this.prevParamDefn = paramDefn;
+
         this._initializePrivateProperties(paramDefn);
 
         var toRemove = Object.keys(diff.toRemove).length > 0,
@@ -96,7 +105,16 @@ define(["./IRenderEngine", './WidgetBuilder', 'cdf/Dashboard.Clean', 'cdf/Logger
       },
 
       registerOnParameterChanged: function(callback) {
-        this._onParameterChanged = callback;
+        this._onParameterChanged = function(param, name, value) {
+          if (param.list && (!value || value == "" || value == "null")) {
+            if (!this.nullValueParams) {
+              this.nullValueParams = [];
+            }
+            this.nullValueParams.push(param);
+          }
+
+          callback(param, name, value);
+        };
       },
 
       registerOnPostInit: function(callback) {

@@ -111,7 +111,7 @@ define(['cdf/lib/Base', 'common-ui/util/GUIDHelper', 'common-ui/underscore'],
         throwAbstractClassError();
       },
 
-      updatePromptPanel: function(paramDefn, diff, isForceRefresh) {
+      updatePromptPanel: function(paramDefn, isForceRefresh) {
         throwAbstractClassError();
       },
 
