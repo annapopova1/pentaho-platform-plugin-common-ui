@@ -16,9 +16,18 @@
  */
 
 define(['cdf/lib/Base', 'cdf/Logger', 'dojo/number', 'dojo/i18n', 'common-ui/util/util', './parameters/ParameterDefinitionDiffer',
-    'common-ui/jquery-clean', './CdfRenderEngine'
+    'common-ui/jquery-clean', './CdfRenderEngine', 'pentaho/service!IRenderEngine?single'
   ],
-  function(Base, Logger, DojoNumber, i18n, Utils, ParamDiff, $, CdfRenderEngine) {
+  function(Base, Logger, DojoNumber, i18n, Utils, ParamDiff, $, CdfRenderEngine, IRenderEngine) {
+
+    var createRenderEngine = function(destinationId) {
+      var renderEngine;
+      if (!IRenderEngine) {
+        IRenderEngine = CdfRenderEngine;
+      }
+      renderEngine = new IRenderEngine(destinationId);
+      return renderEngine;
+    };
 
     // Add specific prompting message bundle
     if (pentaho.common.Messages) {
@@ -144,7 +153,7 @@ define(['cdf/lib/Base', 'cdf/Logger', 'dojo/number', 'dojo/i18n', 'common-ui/uti
       _validateStatePage(state.page, paramDefn.paginate, paramDefn.totalPages);
     };
 
-    var PromptPanel = Base.extend({
+    var PromptService = Base.extend({
       paramDefn: undefined,
       parametersChanged: false,
       onParameterChanged: null,
@@ -169,18 +178,9 @@ define(['cdf/lib/Base', 'cdf/Logger', 'dojo/number', 'dojo/i18n', 'common-ui/uti
           throw new Error('destinationId is required');
         }
 
-        /**
-         * The html id destination where the prompt will be rendered
-         *
-         * @name PromptPanel#destinationId
-         * @type String
-         * @default undefined
-         */
-        this.destinationId = destinationId;
-
         this.setParamDefn(paramDefn);
 
-        this.renderEngine = new CdfRenderEngine(this.destinationId);
+        this.renderEngine = createRenderEngine(destinationId);
 
         this.paramDiffer = new ParamDiff();
 
@@ -727,5 +727,5 @@ define(['cdf/lib/Base', 'cdf/Logger', 'dojo/number', 'dojo/i18n', 'common-ui/uti
       }
     });
 
-    return PromptPanel;
+    return PromptService;
   });

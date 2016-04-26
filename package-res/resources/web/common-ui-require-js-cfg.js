@@ -260,4 +260,6 @@
   requirePaths["pentaho/visual/editor"] = basePath + "/pentaho/visual/2.5/editor";
   requirePaths["pentaho/visual/spec"] = basePath + "/pentaho/visual/2.5/spec";
   requirePaths["pentaho/visual/type"] = basePath + "/pentaho/visual/2.5/type";
+
+  requireService["common-ui/prompting/CdfRenderEngine"] = "IRenderEngine";
 }());
