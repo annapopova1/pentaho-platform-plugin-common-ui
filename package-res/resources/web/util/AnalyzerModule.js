@@ -185,6 +185,7 @@ define([
         this.analyzerIframe.setAttribute("height", "100%");
         this.analyzerIframe.setAttribute("width", "100%");
         this.analyzerIframe.setAttribute("frameborder", 0);
+        this.analyzerIframe.setAttribute("style", "display: block;");
 
         // add it to the dom
         this.documentAnalyzerRoot.appendChild(this.analyzerIframe);
