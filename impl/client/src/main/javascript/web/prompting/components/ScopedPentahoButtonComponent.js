@@ -36,7 +36,7 @@
  * @class
  * @extends BaseComponent
  */
-define([ 'cdf/components/BaseComponent', 'common-ui/jquery-clean' ], function(BaseComponent, $) {
+define(["cdf/components/BaseComponent", "common-ui/jquery-clean"], function(BaseComponent, $) {
   return BaseComponent.extend({
 
     /**
@@ -45,7 +45,7 @@ define([ 'cdf/components/BaseComponent', 'common-ui/jquery-clean' ], function(Ba
      * @method
      * @name ScopedPentahoButtonComponent#update
      */
-    update : function() {
+    update: function() {
       this.registerSubmitClickEvent();
     },
 
@@ -57,16 +57,18 @@ define([ 'cdf/components/BaseComponent', 'common-ui/jquery-clean' ], function(Ba
      * @name ScopedPentahoButtonComponent#registerSubmitClickEvent
      * @private
      */
-    registerSubmitClickEvent : function() {
-      if (!this.viewReportButtonRegistered) {
+    registerSubmitClickEvent: function() {
+      if(!this.viewReportButtonRegistered) {
 
         var $container = $("#" + this.htmlObject).empty();
+        var disableButton = this.promptPanel.paramDefn.disableSubmitButton;
 
-        $("<button type='button' class='pentaho-button'/>").text(this.label).bind("mousedown",
-          this.expressionStart.bind(this)).bind("click", function() {
-          // Don't let click-event go as first argument.
-          this.expression(false);
-        }.bind(this)).appendTo($container);
+        $("<button type='button' class='pentaho-button' " + (disableButton ? "disabled" : "") + "/>")
+          .text(this.label)
+          .bind("mousedown", this.expressionStart.bind(this)).bind("click", function() {
+            // Don't let click-event go as first argument.
+            this.expression(false);
+          }.bind(this)).appendTo($container);
       }
     },
 
@@ -77,7 +79,7 @@ define([ 'cdf/components/BaseComponent', 'common-ui/jquery-clean' ], function(Ba
      * @method
      * @param {Boolean} isInit
      */
-    expression : function(isInit) {
+    expression: function(isInit) {
     },
 
     /**
@@ -86,7 +88,7 @@ define([ 'cdf/components/BaseComponent', 'common-ui/jquery-clean' ], function(Ba
      * @name ScopedPentahoButtonComponent#expressionStart
      * @method
      */
-    expressionStart : function() {
+    expressionStart: function() {
     }
   });
 });

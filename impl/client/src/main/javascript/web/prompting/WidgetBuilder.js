@@ -41,48 +41,48 @@
 
  */
 
-
 /**
  * The WidgetBuilder Class
  *
  * @name WidgetBuilder
  * @class
  */
-define(['./builders/PromptPanelBuilder', './builders/ParameterGroupPanelBuilder', './builders/ParameterPanelBuilder',
-      './builders/SubmitPanelBuilder', './builders/SubmitComponentBuilder', './builders/LabelBuilder',
-      './builders/ErrorLabelBuilder', './builders/DropDownBuilder', './builders/RadioBuilder', './builders/CheckBuilder',
-      './builders/MultiButtonBuilder', './builders/ListBuilder', './builders/DateInputBuilder',
-      './builders/ExternalInputBuilder', './builders/TextAreaBuilder', './builders/TextInputBuilder',
-      './builders/StaticAutocompleteBoxBuilder'],
+define(["./builders/PromptPanelBuilder", "./builders/ParameterGroupPanelBuilder", "./builders/ParameterPanelBuilder",
+      "./builders/SubmitPanelBuilder", "./builders/SubmitComponentBuilder", "./builders/LabelBuilder",
+      "./builders/ErrorLabelBuilder", "./builders/DropDownBuilder", "./builders/RadioBuilder",
+      "./builders/CheckBuilder", "./builders/MultiButtonBuilder", "./builders/ListBuilder",
+      "./builders/DateInputBuilder", "./builders/ExternalInputBuilder", "./builders/TextAreaBuilder",
+      "./builders/TextInputBuilder", "./builders/StaticAutocompleteBoxBuilder", "./builders/ExtendedTextInputBuilder"],
 
-    function (PromptPanelBuilder, ParameterGroupPanelBuilder, ParameterPanelBuilder, SubmitPanelBuilder,
+    function(PromptPanelBuilder, ParameterGroupPanelBuilder, ParameterPanelBuilder, SubmitPanelBuilder,
               SubmitComponentBuilder, LabelBuilder, ErrorLabelBuilder, DropDownBuilder, RadioBuilder, CheckBuilder,
-              MultiButtonBuilder, ListBuilder, DateInputBuilder, ExternalInputBuilder, TextAreaBuilder, TextInputBuilder,
-              StaticAutocompleteBoxBuilder) {
+              MultiButtonBuilder, ListBuilder, DateInputBuilder, ExternalInputBuilder, TextAreaBuilder,
+              TextInputBuilder, StaticAutocompleteBoxBuilder, ExtendedTextInputBuilder) {
 
       return {
         /**
          * the mappings of the builders names and their objects
          */
         mapping: {
-          'prompt-panel': new PromptPanelBuilder(),
-          'group-panel': new ParameterGroupPanelBuilder(),
-          'parameter-panel': new ParameterPanelBuilder(),
-          'submit-panel': new SubmitPanelBuilder(),
-          'submit': new SubmitComponentBuilder(),
-          'label': new LabelBuilder(),
-          'error-label': new ErrorLabelBuilder(),
-          'dropdown': new DropDownBuilder(),
-          'radio': new RadioBuilder(),
-          'checkbox': new CheckBuilder(),
-          'togglebutton': new MultiButtonBuilder(),
-          'list': new ListBuilder(),
-          'datepicker': new DateInputBuilder(),
-          'filebrowser': new ExternalInputBuilder(),
-          'external-input': new ExternalInputBuilder(),
-          'multi-line': new TextAreaBuilder(),
-          'autocompletebox': new StaticAutocompleteBoxBuilder(),
-          'textbox': new TextInputBuilder()
+          "prompt-panel": new PromptPanelBuilder(),
+          "group-panel": new ParameterGroupPanelBuilder(),
+          "parameter-panel": new ParameterPanelBuilder(),
+          "submit-panel": new SubmitPanelBuilder(),
+          "submit": new SubmitComponentBuilder(),
+          "label": new LabelBuilder(),
+          "error-label": new ErrorLabelBuilder(),
+          "dropdown": new DropDownBuilder(),
+          "radio": new RadioBuilder(),
+          "checkbox": new CheckBuilder(),
+          "togglebutton": new MultiButtonBuilder(),
+          "list": new ListBuilder(),
+          "datepicker": new DateInputBuilder(),
+          "filebrowser": new ExternalInputBuilder(),
+          "external-input": new ExternalInputBuilder(),
+          "multi-line": new TextAreaBuilder(),
+          "autocompletebox": new StaticAutocompleteBoxBuilder(),
+          "textbox": new TextInputBuilder(),
+          "extended-textbox": new ExtendedTextInputBuilder()
         },
 
         /**
@@ -95,10 +95,10 @@ define(['./builders/PromptPanelBuilder', './builders/ParameterGroupPanelBuilder'
          * @returns {ParameterWidgetBuilderBase}
          * @private
          */
-        _findBuilderFor: function (args, type) {
-          type = type || (args.param && args.param.attributes ? args.param.attributes['parameter-render-type'] : null);
-          if (this.mapping.hasOwnProperty(type)) {
-            if (type == "textbox" && args.param.list) {
+        _findBuilderFor: function(args, type) {
+          type = type || (args.param && args.param.attributes ? args.param.attributes["parameter-render-type"] : null);
+          if(this.mapping.hasOwnProperty(type)) {
+            if(type == "textbox" && args.param.list) {
               type = "autocompletebox";
             }
           } else {
@@ -116,10 +116,10 @@ define(['./builders/PromptPanelBuilder', './builders/ParameterGroupPanelBuilder'
          * @param {String} type The type of the builder to get
          * @returns {BaseComponent} The CDF component built
          */
-        build: function (args, type) {
+        build: function(args, type) {
           var widget = this._findBuilderFor(args, type).build(args);
-          if (widget.parameter && widget.param) {
-            widget.postChange = function () {
+          if(widget.parameter && widget.param) {
+            widget.postChange = function() {
               args.promptPanel.parameterChanged(this.param, this.parameter, this.getValue());
             }.bind(widget);
           }

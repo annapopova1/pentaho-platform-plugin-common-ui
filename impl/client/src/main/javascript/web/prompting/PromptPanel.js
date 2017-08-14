@@ -15,7 +15,6 @@
  *
  */
 
-
 /**
  * The Prompt Panel Class
  *
@@ -34,12 +33,12 @@
  * @property {Function} onStateChanged Callback called if defined after state variables have been changed on the prompt panel or parameter definition
  * @property {?Function} onSubmit Callback called when the submit function executes, null if no callback is registered.
  */
-define(['cdf/lib/Base', 'cdf/Logger', 'dojo/number', 'dojo/i18n', 'common-ui/util/util', 'common-ui/util/GUIDHelper', './WidgetBuilder', 'cdf/Dashboard.Clean', './parameters/ParameterDefinitionDiffer', 'common-ui/jquery-clean', 'common-ui/underscore'],
-    function (Base, Logger, DojoNumber, i18n, Utils, GUIDHelper, WidgetBuilder, Dashboard, ParamDiff, $, _) {
+define(["cdf/lib/Base", "cdf/Logger", "dojo/number", "dojo/i18n", "common-ui/util/util", "common-ui/util/GUIDHelper", "./WidgetBuilder", "cdf/Dashboard.Clean", "./parameters/ParameterDefinitionDiffer", "common-ui/jquery-clean", "common-ui/underscore"],
+    function(Base, Logger, DojoNumber, i18n, Utils, GUIDHelper, WidgetBuilder, Dashboard, ParamDiff, $, _) {
 
       // Add specific prompting message bundle
-      if (pentaho.common.Messages) {
-        pentaho.common.Messages.addUrlBundle('prompting',CONTEXT_PATH+'i18n?plugin=common-ui&name=resources/web/prompting/messages/messages');
+      if(pentaho.common.Messages) {
+        pentaho.common.Messages.addUrlBundle("prompting", CONTEXT_PATH + "i18n?plugin=common-ui&name=resources/web/prompting/messages/messages");
       }
 
       var _STATE_CONSTANTS = {
@@ -80,7 +79,7 @@ define(['cdf/lib/Base', 'cdf/Logger', 'dojo/number', 'dojo/i18n', 'common-ui/uti
           promptPanel: this
         });
         return this.widgetBuilder.build(newObj, type);
-      };
+      }
 
       /**
        * Creates a Widget for the Parameter
@@ -95,7 +94,7 @@ define(['cdf/lib/Base', 'cdf/Logger', 'dojo/number', 'dojo/i18n', 'common-ui/uti
         return _createWidget.call(this, {
           param: param
         });
-      };
+      }
 
       /**
        * Creates a Widget for the Label
@@ -109,8 +108,8 @@ define(['cdf/lib/Base', 'cdf/Logger', 'dojo/number', 'dojo/i18n', 'common-ui/uti
       function _createWidgetForLabel(param) {
         return _createWidget.call(this, {
           param: param
-        }, 'label');
-      };
+        }, "label");
+      }
 
       /**
        * Creates a Widget for the Error Label
@@ -126,8 +125,8 @@ define(['cdf/lib/Base', 'cdf/Logger', 'dojo/number', 'dojo/i18n', 'common-ui/uti
         return _createWidget.call(this, {
           param: param,
           errorMessage: e
-        }, 'error-label');
-      };
+        }, "error-label");
+      }
 
       /**
        * Creates a Widget for the Parameter Panel
@@ -143,8 +142,8 @@ define(['cdf/lib/Base', 'cdf/Logger', 'dojo/number', 'dojo/i18n', 'common-ui/uti
         return _createWidget.call(this, {
           param: param,
           components: components
-        }, 'parameter-panel');
-      };
+        }, "parameter-panel");
+      }
 
       /**
        * Creates a Widget for the Group Panel
@@ -160,8 +159,8 @@ define(['cdf/lib/Base', 'cdf/Logger', 'dojo/number', 'dojo/i18n', 'common-ui/uti
         return _createWidget.call(this, {
           paramGroup: group,
           components: components
-        }, 'group-panel');
-      };
+        }, "group-panel");
+      }
 
       /**
        * Creates a Widget for the Submit Panel
@@ -172,8 +171,8 @@ define(['cdf/lib/Base', 'cdf/Logger', 'dojo/number', 'dojo/i18n', 'common-ui/uti
        * @private
        */
       function _createWidgetForSubmitPanel() {
-        return _createWidget.call(this,{}, 'submit-panel');
-      };
+        return _createWidget.call(this, {}, "submit-panel");
+      }
 
       /**
        * Creates a Widget for the Prompt Panel
@@ -184,8 +183,8 @@ define(['cdf/lib/Base', 'cdf/Logger', 'dojo/number', 'dojo/i18n', 'common-ui/uti
        * @private
        */
       function _createWidgetForPromptPanel() {
-        return this.widgetBuilder.build(this, 'prompt-panel');
-      };
+        return this.widgetBuilder.build(this, "prompt-panel");
+      }
 
       /**
        * @callback callback~cb
@@ -203,10 +202,10 @@ define(['cdf/lib/Base', 'cdf/Logger', 'dojo/number', 'dojo/i18n', 'common-ui/uti
        */
       function _mapComponents(component, callback) {
         callback(component);
-        if (component.components) {
+        if(component.components) {
           _mapComponentsList(component.components, callback);
         }
-      };
+      }
 
       /**
        * Pre-order traversal of components given a list of root components.
@@ -220,7 +219,7 @@ define(['cdf/lib/Base', 'cdf/Logger', 'dojo/number', 'dojo/i18n', 'common-ui/uti
         $.each(components, function(i, component) {
           _mapComponents(component, callback);
         });
-      };
+      }
 
       /**
        * Gets a component by its parameter definition.
@@ -250,11 +249,11 @@ define(['cdf/lib/Base', 'cdf/Logger', 'dojo/number', 'dojo/i18n', 'common-ui/uti
        * @returns {BaseComponent|null} If no component is found, null will be returned
        */
       var _getComponentByParamName = function(parameterName, getPanel) {
-        for (var i in this.dashboard.components) {
+        for(var i in this.dashboard.components) {
           var component = this.dashboard.components[i];
-          if (component.parameter === parameterName) {
+          if(component.parameter === parameterName) {
             var isPanel = component.type.search("Panel") > -1;
-            if ((getPanel && isPanel) || (!getPanel && !isPanel)) {
+            if((getPanel && isPanel) || (!getPanel && !isPanel)) {
               return component;
             }
           }
@@ -274,7 +273,7 @@ define(['cdf/lib/Base', 'cdf/Logger', 'dojo/number', 'dojo/i18n', 'common-ui/uti
         this.dashboard.addComponent(component);
         this.dashboard.updateComponent(component);
 
-        for (var i in component.components) { // Loop through panel components
+        for(var i in component.components) { // Loop through panel components
           _addComponent.call(this, component.components[i]);
         }
       };
@@ -288,8 +287,8 @@ define(['cdf/lib/Base', 'cdf/Logger', 'dojo/number', 'dojo/i18n', 'common-ui/uti
        */
       var _findSubmitComponent = function(panelComponent) {
         var result = null;
-        for (var i = 0; i < panelComponent.components.length; i++) {
-          if (panelComponent.components[i].promptType == "submit"
+        for(var i = 0; i < panelComponent.components.length; i++) {
+          if(panelComponent.components[i].promptType == "submit"
             && panelComponent.components[i].type == "FlowPromptLayoutComponent") {
             result = panelComponent.components[i];
             break;
@@ -307,7 +306,7 @@ define(['cdf/lib/Base', 'cdf/Logger', 'dojo/number', 'dojo/i18n', 'common-ui/uti
        */
       var _findErrorComponents = function(panelComponent) {
         var result = [];
-        if (panelComponent.components) {
+        if(panelComponent.components) {
           result = panelComponent.components.filter(function(item) {
             return item.promptType == "label" && item.type == "TextComponent" && item.isErrorIndicator;
           });
@@ -325,7 +324,7 @@ define(['cdf/lib/Base', 'cdf/Logger', 'dojo/number', 'dojo/i18n', 'common-ui/uti
        */
       var _removeChildComponent = function(parent, toRemoveComponent) {
         var index = parent.components.indexOf(toRemoveComponent);
-        if (index > -1) {
+        if(index > -1) {
           parent.components.splice(index, 1);
         }
       };
@@ -341,14 +340,14 @@ define(['cdf/lib/Base', 'cdf/Logger', 'dojo/number', 'dojo/i18n', 'common-ui/uti
        * @returns {bool} The result of comparison
        */
       var _areParamsDifferent = function(paramValue, paramSelectedValue, paramType) {
-        if (paramValue && paramSelectedValue) {
-          if (_.isArray( paramValue) && _.isArray(paramSelectedValue)) {
+        if(paramValue && paramSelectedValue) {
+          if(_.isArray(paramValue) && _.isArray(paramSelectedValue)) {
             if(paramValue.length != paramSelectedValue.length) {
               return true;
             }
             return !_.isEqual(paramValue.sort(), paramSelectedValue.sort());
           } else {
-            switch (paramType) {
+            switch(paramType) {
               case "java.lang.String": // Used upper case to eliminate UPPER() post-process formula influence on the strings comparison
                 if(!_.isArray(paramSelectedValue)) {
                   return paramValue.toUpperCase() != paramSelectedValue.toUpperCase();
@@ -356,7 +355,7 @@ define(['cdf/lib/Base', 'cdf/Logger', 'dojo/number', 'dojo/i18n', 'common-ui/uti
                   return paramValue != paramSelectedValue;
                 }
               case "java.sql.Date": // Set time to zero to eliminate its influence on the days comparison
-                return (new Date(paramValue).setHours(0,0,0,0)) != (new Date(paramSelectedValue).setHours(0,0,0,0));
+                return (new Date(paramValue).setHours(0, 0, 0, 0)) != (new Date(paramSelectedValue).setHours(0, 0, 0, 0));
               default:
                 return paramValue != paramSelectedValue;
             }
@@ -382,7 +381,7 @@ define(['cdf/lib/Base', 'cdf/Logger', 'dojo/number', 'dojo/i18n', 'common-ui/uti
         var cantModify = _STATE_CONSTANTS.readOnlyProperties.some(function(item) {
           return state.hasOwnProperty(item);
         });
-        if (cantModify) {
+        if(cantModify) {
           throw new Error(_STATE_CONSTANTS.msgs.notChangeReadonlyProp(_STATE_CONSTANTS.readOnlyProperties));
         }
       };
@@ -398,7 +397,7 @@ define(['cdf/lib/Base', 'cdf/Logger', 'dojo/number', 'dojo/i18n', 'common-ui/uti
        * @throws {Error}        Exception if input value is not a boolean type
        */
       var _validateBooleanState = function(name, value) {
-        if (value != null && typeof value !== "boolean") {
+        if(value != null && typeof value !== "boolean") {
           throw new Error(_STATE_CONSTANTS.msgs.incorrectBooleanType(name, value));
         }
       };
@@ -415,7 +414,7 @@ define(['cdf/lib/Base', 'cdf/Logger', 'dojo/number', 'dojo/i18n', 'common-ui/uti
        */
       var _validateAutoSubmit = function(autoSubmit, allowAutoSubmit) {
         _validateBooleanState("autoSubmit", autoSubmit);
-        if (autoSubmit != null && !allowAutoSubmit) {
+        if(autoSubmit != null && !allowAutoSubmit) {
           throw new Error(_STATE_CONSTANTS.msgs.notAllowedAutoSubmit);
         }
       };
@@ -432,14 +431,14 @@ define(['cdf/lib/Base', 'cdf/Logger', 'dojo/number', 'dojo/i18n', 'common-ui/uti
        * @throws {Error}            Exception if type of 'page' is incorrect or pagination is not activated or 'page' has incorrect value
        */
       var _validateStatePage = function(page, paginate, totalPages) {
-        if (page != null) {
-          if (typeof page !== "number") {
+        if(page != null) {
+          if(typeof page !== "number") {
             throw new Error(_STATE_CONSTANTS.msgs.incorrectNumberType(page));
           }
-          if (!paginate) {
+          if(!paginate) {
             throw new Error(_STATE_CONSTANTS.msgs.paginationNotActivated(page));
           }
-          if (page < 0 || page >= totalPages) {
+          if(page < 0 || page >= totalPages) {
             throw new Error(_STATE_CONSTANTS.msgs.incorrectPageValue(page, totalPages - 1));
           }
         }
@@ -456,7 +455,7 @@ define(['cdf/lib/Base', 'cdf/Logger', 'dojo/number', 'dojo/i18n', 'common-ui/uti
        * @throws {Error}                         Exception if input 'state' parameter is invalid
        */
       var _validateState = function(state, paramDefn) {
-        if (!state || typeof state !== 'object') {
+        if(!state || typeof state !== "object") {
           throw new Error(_STATE_CONSTANTS.msgs.incorrectStateObjType);
         }
         _validateReadOnlyState(state);
@@ -492,9 +491,9 @@ define(['cdf/lib/Base', 'cdf/Logger', 'dojo/number', 'dojo/i18n', 'common-ui/uti
          * @param {ParameterDefinition} paramDefn The parameter definition assigned to the prompt
          * @param {Object} [options] Extra configuration options to be passed to the prompt renderer constructor.
          */
-        constructor: function (destinationId, paramDefn, options) {
-          if (!destinationId) {
-            throw new Error('destinationId is required');
+        constructor: function(destinationId, paramDefn, options) {
+          if(!destinationId) {
+            throw new Error("destinationId is required");
           }
 
           /**
@@ -535,19 +534,18 @@ define(['cdf/lib/Base', 'cdf/Logger', 'dojo/number', 'dojo/i18n', 'common-ui/uti
          * @returns {Object}
          */
         getParamDefn: function() {
-          if (!this.paramDefn) {
-            throw new Error('paramDefn is required. Call PromptPanel#setParamDefn');
+          if(!this.paramDefn) {
+            throw new Error("paramDefn is required. Call PromptPanel#setParamDefn");
           }
           return this.paramDefn;
         },
-
 
         /**
          * Registers a post init event on the dashboard
          * @param {Function} callback The function to be executed when the event is triggered
          */
         onPostInit: function(callback) {
-          this.getDashboard().on('cdf:postInit', callback);
+          this.getDashboard().on("cdf:postInit", callback);
         },
 
         /**
@@ -559,19 +557,19 @@ define(['cdf/lib/Base', 'cdf/Logger', 'dojo/number', 'dojo/i18n', 'common-ui/uti
           this.paramDefn = paramDefn;
 
           var fireStateChanged = function(paramName, oldParamDefn, newParamDefn, getValueCallback) {
-            if (this.onStateChanged == null) {
+            if(this.onStateChanged == null) {
               return;
             }
 
             var oldVal = oldParamDefn ? getValueCallback(oldParamDefn) : undefined;
             var newVal = newParamDefn ? getValueCallback(newParamDefn) : undefined;
 
-            if (oldVal != newVal) {
+            if(oldVal != newVal) {
               this.onStateChanged(paramName, oldVal, newVal);
             }
           }.bind(this);
 
-          if (paramDefn) {
+          if(paramDefn) {
             if(this.autoSubmit == undefined) {
               this.setAutoSubmit(paramDefn.allowAutoSubmit());
             }
@@ -594,7 +592,7 @@ define(['cdf/lib/Base', 'cdf/Logger', 'dojo/number', 'dojo/i18n', 'common-ui/uti
           var prevVal = this.autoSubmit;
           this.autoSubmit = autoSubmit;
 
-          if (this.onStateChanged != null && prevVal != this.autoSubmit) {
+          if(this.onStateChanged != null && prevVal != this.autoSubmit) {
             this.onStateChanged("autoSubmit", prevVal, this.autoSubmit);
           }
         },
@@ -606,7 +604,7 @@ define(['cdf/lib/Base', 'cdf/Logger', 'dojo/number', 'dojo/i18n', 'common-ui/uti
          * @method
          * @returns {Boolean}
          */
-        getAutoSubmitSetting: function () {
+        getAutoSubmitSetting: function() {
           return this.autoSubmit;
         },
 
@@ -618,8 +616,8 @@ define(['cdf/lib/Base', 'cdf/Logger', 'dojo/number', 'dojo/i18n', 'common-ui/uti
          * @param {Parameter} parameter The parameter
          * @returns {String} The parameter name
          */
-        getParameterName: function (parameter) {
-          if (typeof parameter === 'string') {
+        getParameterName: function(parameter) {
+          if(typeof parameter === "string") {
             return this.guid + parameter;
           }
           return this.guid + parameter.name;
@@ -633,31 +631,31 @@ define(['cdf/lib/Base', 'cdf/Logger', 'dojo/number', 'dojo/i18n', 'common-ui/uti
          * @method
          * @returns {Object} parameters The parameters name|value pair assigned to the dashboard instance
          */
-        getParameterValues: function () {
-          function parseNumber(val){
-            try{
-              return DojoNumber.parse(val, { locale : Util.normalizeDojoLocale(SESSION_LOCALE) });
+        getParameterValues: function() {
+          function parseNumber(val) {
+            try {
+              return DojoNumber.parse(val, {locale: Util.normalizeDojoLocale(SESSION_LOCALE)});
             } catch(e) {
-              return DojoNumber.parse(val, { locale : "en" });
+              return DojoNumber.parse(val, {locale: "en"});
             }
           }
           var params = {};
-          this.getParamDefn().mapParameters(function (param) {
+          this.getParamDefn().mapParameters(function(param) {
             var value = this.getParameterValue(this.getParameterName(param));
-            if (value === '' || typeof value == 'undefined') {
+            if(value === "" || typeof value == "undefined") {
               return;
             }
-            if (param.multiSelect && !$.isArray(value)) {
+            if(param.multiSelect && !$.isArray(value)) {
               value = [value];
             }
-            if (Utils.isNumberType(param.type)) {
+            if(Utils.isNumberType(param.type)) {
               var localization = i18n.getLocalization("dojo.cldr", "number", SESSION_LOCALE.toLowerCase());
               var defaultLocalization = i18n.getLocalization("dojo.cldr", "number", null);
               var valueParsed;
               try {
-                if (value.indexOf(localization ? localization.decimal : defaultLocalization.decimal) > 0) {
+                if(value.indexOf(localization ? localization.decimal : defaultLocalization.decimal) > 0) {
                   valueParsed = parseNumber(value);
-                  if (valueParsed.toString().indexOf(defaultLocalization.decimal) < 0) {
+                  if(valueParsed.toString().indexOf(defaultLocalization.decimal) < 0) {
                     valueParsed = DojoNumber.format(valueParsed, {
                       places: value.length - value.indexOf(localization ? localization.decimal : defaultLocalization.decimal) - 1
                     });
@@ -667,7 +665,7 @@ define(['cdf/lib/Base', 'cdf/Logger', 'dojo/number', 'dojo/i18n', 'common-ui/uti
                 } else {
                   valueParsed = parseNumber(value);
                 }
-              } catch (e) {
+              } catch(e) {
                 valueParsed = value;
               }
             }
@@ -683,8 +681,8 @@ define(['cdf/lib/Base', 'cdf/Logger', 'dojo/number', 'dojo/i18n', 'common-ui/uti
          * @method
          * @returns {String} The join of the guid of the prompt with a new one generated by the GUIDHelper
          */
-        generateWidgetGUID: function () {
-          return this.guid + '-' + this.promptGUIDHelper.generateGUID();
+        generateWidgetGUID: function() {
+          return this.guid + "-" + this.promptGUIDHelper.generateGUID();
         },
 
         /**
@@ -696,11 +694,11 @@ define(['cdf/lib/Base', 'cdf/Logger', 'dojo/number', 'dojo/i18n', 'common-ui/uti
          * @param {Parameter} param The parameter name
          * @private
          */
-        _initializeParameterValue: function (paramDefn, param) {
+        _initializeParameterValue: function(paramDefn, param) {
           var value = param.getSelectedValuesValue();
-          if (value.length === 0) {
-            value = ''; // Dashboards' null value is an empty string
-          } else if (value.length === 1) {
+          if(value.length === 0) {
+            value = ""; // Dashboards' null value is an empty string
+          } else if(value.length === 1) {
             value = value[0];
           }
           this.setParameterValue(param, value);
@@ -714,7 +712,7 @@ define(['cdf/lib/Base', 'cdf/Logger', 'dojo/number', 'dojo/i18n', 'common-ui/uti
          * @param {Parameter} param The name of the parameter
          * @param {Object} value The value of the parameter
          */
-        setParameterValue: function (param, value) {
+        setParameterValue: function(param, value) {
           this.dashboard.setParameter(this.getParameterName(param), value);
         },
 
@@ -726,8 +724,8 @@ define(['cdf/lib/Base', 'cdf/Logger', 'dojo/number', 'dojo/i18n', 'common-ui/uti
          * @param {Parameter} param The parameter name
          * @returns {Object} The parameter value stored in the dashboard instance
          */
-        getParameterValue: function (param) {
-          if (typeof param !== 'string') {
+        getParameterValue: function(param) {
+          if(typeof param !== "string") {
             param = this.getParameterName(param);
           }
 
@@ -741,7 +739,7 @@ define(['cdf/lib/Base', 'cdf/Logger', 'dojo/number', 'dojo/i18n', 'common-ui/uti
          * @method
          * @private
          */
-        _ready: function () {
+        _ready: function() {
           this.ready(this);
         },
 
@@ -755,7 +753,7 @@ define(['cdf/lib/Base', 'cdf/Logger', 'dojo/number', 'dojo/i18n', 'common-ui/uti
          * @param {Boolean} [options.isInit] Flag indicating if submit is being executed during initialization.
          * @private
          */
-        _submit: function (options) {
+        _submit: function(options) {
           this.submit(this, options);
         },
 
@@ -766,7 +764,7 @@ define(['cdf/lib/Base', 'cdf/Logger', 'dojo/number', 'dojo/i18n', 'common-ui/uti
          * @method
          * @private
          */
-        _submitStart: function () {
+        _submitStart: function() {
           this.submitStart(this);
         },
 
@@ -777,7 +775,7 @@ define(['cdf/lib/Base', 'cdf/Logger', 'dojo/number', 'dojo/i18n', 'common-ui/uti
          * @method
          * @param {PromptPanel} promptPanel
          */
-        ready: function (promptPanel) {
+        ready: function(promptPanel) {
         },
 
         /**
@@ -790,9 +788,9 @@ define(['cdf/lib/Base', 'cdf/Logger', 'dojo/number', 'dojo/i18n', 'common-ui/uti
          * @param {Object}  [options]        Additional configuration options.
          * @param {Boolean} [options.isInit] Flag indicating if submit is being executed during initialization.
          */
-        submit: function (promptPanel, options) {
-          if (this.onSubmit) {
-            if (typeof this.onSubmit === "function") {
+        submit: function(promptPanel, options) {
+          if(this.onSubmit) {
+            if(typeof this.onSubmit === "function") {
               this.onSubmit(options);
             } else {
               Logger.warn("The onSubmit event callback is not a function");
@@ -807,7 +805,7 @@ define(['cdf/lib/Base', 'cdf/Logger', 'dojo/number', 'dojo/i18n', 'common-ui/uti
          * @method
          * @param {PromptPanel} promptPanel
          */
-        submitStart: function (promptPanel) {
+        submitStart: function(promptPanel) {
         },
 
         /**
@@ -824,14 +822,14 @@ define(['cdf/lib/Base', 'cdf/Logger', 'dojo/number', 'dojo/i18n', 'common-ui/uti
          * @param {String} name
          * @param {Object} value
          */
-        parameterChanged: function (param, name, value) {
+        parameterChanged: function(param, name, value) {
 
-          if (this.onParameterChanged) {
+          if(this.onParameterChanged) {
             var paramCallback = this.onParameterChanged[name] ?
                   this.onParameterChanged[name] :
-                  this.onParameterChanged[''];
-            if (paramCallback) {
-              if (typeof paramCallback === 'function') {
+                  this.onParameterChanged[""];
+            if(paramCallback) {
+              if(typeof paramCallback === "function") {
                 paramCallback(name, value, param);
               } else {
                 Logger.warn("The parameterChanged callback for '" + name + "' is not a function");
@@ -839,8 +837,8 @@ define(['cdf/lib/Base', 'cdf/Logger', 'dojo/number', 'dojo/i18n', 'common-ui/uti
             }
           }
 
-          if (param.list && (!value || value == "" || value == "null")) {
-            if (!this.nullValueParams) {
+          if(param.list && (!value || value == "" || value == "null")) {
+            if(!this.nullValueParams) {
               this.nullValueParams = [];
             }
 
@@ -850,7 +848,7 @@ define(['cdf/lib/Base', 'cdf/Logger', 'dojo/number', 'dojo/i18n', 'common-ui/uti
           this._setTimeoutRefreshPrompt();
           this.parametersChanged = true;
 
-          if (this.onStateChanged != null) {
+          if(this.onStateChanged != null) {
             this.onStateChanged("parametersChanged", false, this.parametersChanged);
           }
         },
@@ -865,7 +863,7 @@ define(['cdf/lib/Base', 'cdf/Logger', 'dojo/number', 'dojo/i18n', 'common-ui/uti
          */
         _setTimeoutRefreshPrompt: function() {
           var myself = this;
-          setTimeout(function() { myself.refreshPrompt() }, 0);
+          setTimeout(function() { myself.refreshPrompt(); }, 0);
         },
 
         /**
@@ -883,7 +881,7 @@ define(['cdf/lib/Base', 'cdf/Logger', 'dojo/number', 'dojo/i18n', 'common-ui/uti
          *
          * The callback signature is: <pre>void function([newParamDef=undefined])</pre> and is called in the global context.
          */
-        getParameterDefinition: function (promptPanel, callback) {
+        getParameterDefinition: function(promptPanel, callback) {
           callback();
         },
 
@@ -895,14 +893,14 @@ define(['cdf/lib/Base', 'cdf/Logger', 'dojo/number', 'dojo/i18n', 'common-ui/uti
          * @param {Boolean} isForceRefresh The flag indicates ability to update all components regardless of the difference previos and new xml from server
          * @method
          */
-        refreshPrompt: function (isForceRefresh) {
+        refreshPrompt: function(isForceRefresh) {
           try {
             this.isForceRefresh = isForceRefresh;
             this.getParameterDefinition(this, this.refresh.bind(this));
-          } catch (e) {
+          } catch(e) {
             this.isForceRefresh = undefined;
             console.log(e);
-            alert('Exception caught attempting to execute refreshCallback');
+            alert("Exception caught attempting to execute refreshCallback");
           }
         },
 
@@ -916,24 +914,24 @@ define(['cdf/lib/Base', 'cdf/Logger', 'dojo/number', 'dojo/i18n', 'common-ui/uti
          * @param {Boolean} noAutoAutoSubmit Prevents auto-submiting, even when auto-submit is false,
          * in the case the the parameter UI is not shown.
          */
-        refresh: function (paramDefn, noAutoAutoSubmit) {
+        refresh: function(paramDefn, noAutoAutoSubmit) {
           var myself = this;
           // Should really throw an error? Or return?
-          if (this.dashboard.waitingForInit && this.dashboard.waitingForInit.length) {
+          if(this.dashboard.waitingForInit && this.dashboard.waitingForInit.length) {
             Logger.warn("Overlapping refresh!");
-            setTimeout(function () {
+            setTimeout(function() {
               myself.refresh(paramDefn, noAutoAutoSubmit);
             }, 0);
             return;
           }
 
-          if (paramDefn) {
+          if(paramDefn) {
             this.diff = this.paramDiffer.diff(this.getParamDefn(), paramDefn, this.nullValueParams);
             this.isRefresh = true;
             this.setParamDefn(paramDefn);
             this.nullValueParams = null;
 
-            if (this.dashboard.components) {
+            if(this.dashboard.components) {
               // Create dictionary by parameter name, of topValue of multi-select listboxes, for restoring later, when possible.
               // But not for mobile, cause the UIs vary. Would need more time to check each.
               var topValuesByParam;
@@ -943,7 +941,7 @@ define(['cdf/lib/Base', 'cdf/Logger', 'dojo/number', 'dojo/i18n', 'common-ui/uti
 
               var focusedParam;
               _mapComponentsList(this.dashboard.components, function(c) {
-                if(!c.components && c.param && c.promptType === 'prompt') {
+                if(!c.components && c.param && c.promptType === "prompt") {
                   if(!focusedParam) {
                     var ph = c.placeholder();
                     if($(":focus", ph).length) {
@@ -951,22 +949,22 @@ define(['cdf/lib/Base', 'cdf/Logger', 'dojo/number', 'dojo/i18n', 'common-ui/uti
                     }
                   }
 
-                  if(topValuesByParam && c.type === 'SelectMultiComponent') {
+                  if(topValuesByParam && c.type === "SelectMultiComponent") {
                     var topValue = c.topValue();
                     if(topValue != null) {
-                      topValuesByParam['_' + c.param.name] = topValue;
+                      topValuesByParam["_" + c.param.name] = topValue;
                     }
                   }
-                } else if(topValuesByParam && c.type === 'ScrollingPromptPanelLayoutComponent'){
+                } else if(topValuesByParam && c.type === "ScrollingPromptPanelLayoutComponent") {
                   // save last scroll position for prompt panel
                   var scrollTopElem = c.placeholder().children(".prompt-panel");
                   var scrollTopValue = scrollTopElem.scrollTop();
                   var scrollLeftElem = scrollTopElem.children(".parameter-wrapper");
                   var scrollLeftValue = scrollLeftElem.scrollLeft();
-                  if(scrollTopValue != null && scrollLeftValue != null){
-                    topValuesByParam['_' + c.name] = {
-                      scrollTopValue : scrollTopValue,
-                      scrollLeftValue : scrollLeftValue
+                  if(scrollTopValue != null && scrollLeftValue != null) {
+                    topValuesByParam["_" + c.name] = {
+                      scrollTopValue: scrollTopValue,
+                      scrollLeftValue: scrollLeftValue
                     };
                   }
                 }
@@ -992,21 +990,21 @@ define(['cdf/lib/Base', 'cdf/Logger', 'dojo/number', 'dojo/i18n', 'common-ui/uti
          */
         _removeComponentsByDiff: function(toRemoveDiff) {
           var toRemove = [];
-          for (var groupName in toRemoveDiff) {
+          for(var groupName in toRemoveDiff) {
             var removeWrap = toRemoveDiff[groupName];
             var params = removeWrap.params;
 
-            for (var i = 0; i < params.length; i++) {
+            for(var i = 0; i < params.length; i++) {
               var param = params[i];
               var component = _getComponentByParam.call(this, param, true); // get component panel by param
-              if (component != null) {
+              if(component != null) {
                 toRemove.push(component);
 
                 // removes the component from the group panel and also removes the group panel if it's empty
                 var groupPanel = this.dashboard.getComponentByName(groupName);
-                if (groupPanel) {
+                if(groupPanel) {
                   _removeChildComponent.call(this, groupPanel, component);
-                  if (groupPanel.components.length == 0) {
+                  if(groupPanel.components.length == 0) {
                     toRemove.push(groupPanel);
                   }
                 }
@@ -1016,15 +1014,15 @@ define(['cdf/lib/Base', 'cdf/Logger', 'dojo/number', 'dojo/i18n', 'common-ui/uti
 
           // removes the submit panel if it's needed
           var panelComponent = this.dashboard.getComponentByName("prompt" + this.guid);
-          if (panelComponent) {
+          if(panelComponent) {
             // we need to remove components from prompt panel component also
-            for (var i in toRemove) {
+            for(var i in toRemove) {
               _removeChildComponent.call(this, panelComponent, toRemove[i]);
             }
 
-            if (panelComponent.components.length == 1) {
+            if(panelComponent.components.length == 1) {
               var submitPanel = _findSubmitComponent.call(this, panelComponent);
-              if (submitPanel) {
+              if(submitPanel) {
                 toRemove.push(submitPanel);
                 _removeChildComponent.call(this, panelComponent, submitPanel);
               }
@@ -1033,7 +1031,7 @@ define(['cdf/lib/Base', 'cdf/Logger', 'dojo/number', 'dojo/i18n', 'common-ui/uti
             this.removeDashboardComponents(toRemove);
 
             // we need clear global panel if it's empty after removing child components
-            if (panelComponent.components.length == 0) {
+            if(panelComponent.components.length == 0) {
               panelComponent.clear();
             }
           }
@@ -1049,16 +1047,16 @@ define(['cdf/lib/Base', 'cdf/Logger', 'dojo/number', 'dojo/i18n', 'common-ui/uti
         _addComponentsByDiff: function(toAddDiff) {
           var panelComponent = this.dashboard.getComponentByName("prompt" + this.guid);
 
-          for (var groupName in toAddDiff) {
+          for(var groupName in toAddDiff) {
             var addWrap = toAddDiff[groupName];
             var params = addWrap.params;
 
             var fieldComponents = [];
-            for (var i = 0; i < params.length; i++) {
+            for(var i = 0; i < params.length; i++) {
               var param = params[i];
               var component = this._buildPanelForParameter(param); // creates a panel component
 
-              if (param.after) { // Find component panel to insert after
+              if(param.after) { // Find component panel to insert after
                 component.after = _getComponentByParam.call(this, param.after, true);
               }
 
@@ -1067,15 +1065,15 @@ define(['cdf/lib/Base', 'cdf/Logger', 'dojo/number', 'dojo/i18n', 'common-ui/uti
 
             // creates a new group panel if it's not present and adds the panel components to the group panel
             var groupPanel = this.dashboard.getComponentByName(groupName);
-            if (!groupPanel) {
+            if(!groupPanel) {
               groupPanel = _createWidgetForGroupPanel.call(this, addWrap.group, fieldComponents);
               panelComponent.components.push(groupPanel);
             } else {
 
-              for (var j in fieldComponents) {
+              for(var j in fieldComponents) {
                 var fieldComponent = fieldComponents[j];
                 var insertAt = 0;
-                if (fieldComponent.after) {
+                if(fieldComponent.after) {
                   var insertAfter = groupPanel.components.indexOf(fieldComponent.after);
                   insertAt = insertAfter + 1;
                 }
@@ -1085,7 +1083,7 @@ define(['cdf/lib/Base', 'cdf/Logger', 'dojo/number', 'dojo/i18n', 'common-ui/uti
           }
 
           // creates a new submit panel if it's not present and adds the submit panel to the prompt panel
-          if (panelComponent.components.length > 0 && !_findSubmitComponent.call(this, panelComponent)) {
+          if(panelComponent.components.length > 0 && !_findSubmitComponent.call(this, panelComponent)) {
             var submitPanel = _createWidgetForSubmitPanel.call(this);
             panelComponent.components.push(submitPanel);
           }
@@ -1102,42 +1100,44 @@ define(['cdf/lib/Base', 'cdf/Logger', 'dojo/number', 'dojo/i18n', 'common-ui/uti
          * @private
          */
         _changeErrors: function(param) {
-          if (param.isErrorChanged) {
+          if(param.isErrorChanged) {
             var errors = this.getParamDefn().errors[param.name];
             var panel = _getComponentByParam.call(this, param, true);
             var existingErrors = _findErrorComponents.call(this, panel);
 
             // remove unused old errors components
             var toRemove = [];
-            for (var errIndex in existingErrors) {
+            for(var errIndex in existingErrors) {
               var errComp = existingErrors[errIndex];
               var _isExistingErrComp = errors && errors.some(function(item) {
                 return item == errComp.label;
               });
-              if (!_isExistingErrComp) {
-                for (var i in existingErrors) {
+              if(!_isExistingErrComp) {
+                for(var i in existingErrors) {
                   _removeChildComponent.call(this, panel, errComp);
                 }
                 toRemove.push(errComp);
               }
             }
-            if (toRemove.length > 0) {
+            if(toRemove.length > 0) {
               this.removeDashboardComponents(toRemove);
             }
 
             // add new errors components
-            if (errors) {
-              for (var errIndex in errors) {
+            if(errors) {
+              // debugger;
+              for(var errIndex in errors) {
                 var error = errors[errIndex];
                 var isExist = existingErrors.some(function(item) {
                   return item.label == error;
                 });
-                if (!isExist) {
+                if(!isExist) {
                   var errIndex = panel.components.length - 1;
                   var errorComponent = _createWidgetForErrorLabel.call(this, param, error);
                   this.dashboard.addComponent(errorComponent);
                   this.dashboard.updateComponent(errorComponent);
-                  panel.components.splice(errIndex, 0, errorComponent);
+
+                  panel.components.splice(this.paramDefn.showErrorsBelowInput ? errIndex + 1 : errIndex, 0, errorComponent);
                 }
               }
             }
@@ -1145,11 +1145,11 @@ define(['cdf/lib/Base', 'cdf/Logger', 'dojo/number', 'dojo/i18n', 'common-ui/uti
             // checks existing errors components to set correct css style
             var existingErrorComponents = _findErrorComponents.call(this, panel);
             if(existingErrorComponents.length > 0) {
-              if (!panel.cssClass || (panel.cssClass && panel.cssClass.indexOf('error') == -1)) {
-                panel.cssClass = (panel.cssClass || '') + ' error';
+              if(!panel.cssClass || (panel.cssClass && panel.cssClass.indexOf("error") == -1)) {
+                panel.cssClass = (panel.cssClass || "") + " error";
               }
             } else {
-              panel.cssClass = (panel.cssClass || '').replace(' error', '');
+              panel.cssClass = (panel.cssClass || "").replace(" error", "");
               panel.removeErrorClass();
             }
           }
@@ -1163,15 +1163,15 @@ define(['cdf/lib/Base', 'cdf/Logger', 'dojo/number', 'dojo/i18n', 'common-ui/uti
          * @param {JSON} toChangeDiff The group of parameters which need to be have their data changed
          */
         _changeComponentsByDiff: function(toChangeDiff) {
-          for (var groupName in toChangeDiff) {
+          for(var groupName in toChangeDiff) {
             var changeWrap = toChangeDiff[groupName];
             var params = changeWrap.params;
 
-            for (var i in params) {
+            for(var i in params) {
               var param = params[i];
 
               var component = _getComponentByParam.call(this, param);
-              if (component != null) {
+              if(component != null) {
                 var updateNeeded = false;
                 // also we should check and update errors components
                 this._changeErrors(param);
@@ -1182,7 +1182,7 @@ define(['cdf/lib/Base', 'cdf/Logger', 'dojo/number', 'dojo/i18n', 'common-ui/uti
                   promptPanel: this
                 }, param.attributes["parameter-render-type"]).valuesArray;
 
-                if (JSON.stringify(component.valuesArray) !== JSON.stringify(newValuesArray) || param.forceUpdate) {
+                if(JSON.stringify(component.valuesArray) !== JSON.stringify(newValuesArray) || param.forceUpdate) {
                   // Find selected value in param values list and set it. This works, even if the data in valuesArray is different
                   this._initializeParameterValue(null, param);
 
@@ -1191,28 +1191,28 @@ define(['cdf/lib/Base', 'cdf/Logger', 'dojo/number', 'dojo/i18n', 'common-ui/uti
                   updateNeeded = true;
                 }
 
-                if (this.autoSubmit) {
+                if(this.autoSubmit) {
                   this.forceSubmit = true;
                 }
 
-                if (!updateNeeded) {
+                if(!updateNeeded) {
                   var paramSelectedValues = param.getSelectedValuesValue();
                   var dashboardParameter = this.dashboard.getParameterValue(component.parameter);
 
                   // if the dashboardParameter is not an array, paramSelectedValues shouldn't be either
-                  if (!_.isArray(dashboardParameter) && paramSelectedValues.length == 1) {
+                  if(!_.isArray(dashboardParameter) && paramSelectedValues.length == 1) {
                     paramSelectedValues = paramSelectedValues[0];
                   }
 
                   updateNeeded = _areParamsDifferent(dashboardParameter, paramSelectedValues, param.type);
-                  if (!updateNeeded && param.isErrorChanged) {
+                  if(!updateNeeded && param.isErrorChanged) {
                     updateNeeded = true;
                   }
                 }
 
-                if (updateNeeded) {
+                if(updateNeeded) {
                   var groupPanel = this.dashboard.getComponentByName(groupName);
-                  _mapComponents(groupPanel, function (component) {
+                  _mapComponents(groupPanel, function(component) {
                     this.dashboard.updateComponent(component);
                   }.bind(this));
                 }
@@ -1229,29 +1229,29 @@ define(['cdf/lib/Base', 'cdf/Logger', 'dojo/number', 'dojo/i18n', 'common-ui/uti
          */
         update: function(diff) {
           var toRemove = Object.keys(diff.toRemove).length > 0,
-              toAdd = Object.keys(diff.toAdd).length > 0,
-              toChangeData = Object.keys(diff.toChangeData).length > 0;
+            toAdd = Object.keys(diff.toAdd).length > 0,
+            toChangeData = Object.keys(diff.toChangeData).length > 0;
 
-          if ((toRemove || toAdd || toChangeData) && this.onBeforeRender) {
+          if((toRemove || toAdd || toChangeData) && this.onBeforeRender) {
             this.onBeforeRender();
           }
 
           // Determine if there are params which need to be removed
-          if (toRemove) {
+          if(toRemove) {
             this._removeComponentsByDiff(diff.toRemove);
           }
 
           // Determine if there are params which need to be added
-          if (toAdd) {
+          if(toAdd) {
             this._addComponentsByDiff(diff.toAdd);
           }
 
           // Determine if there are params which need to be changed
-          if (toChangeData) {
+          if(toChangeData) {
             this._changeComponentsByDiff(diff.toChangeData);
           }
 
-          if ((toRemove || toAdd || toChangeData) && this.onAfterRender) {
+          if((toRemove || toAdd || toChangeData) && this.onAfterRender) {
             this.onAfterRender();
           }
         },
@@ -1265,8 +1265,8 @@ define(['cdf/lib/Base', 'cdf/Logger', 'dojo/number', 'dojo/i18n', 'common-ui/uti
          * @param {Boolean} noAutoAutoSubmit Prevents auto-submiting, even when auto-submit is false,
          * in the case the the parameter UI is not shown.
          */
-        init: function (noAutoAutoSubmit) {
-          if (this.onBeforeUpdate) {
+        init: function(noAutoAutoSubmit) {
+          if(this.onBeforeUpdate) {
             this.onBeforeUpdate();
           }
 
@@ -1274,53 +1274,53 @@ define(['cdf/lib/Base', 'cdf/Logger', 'dojo/number', 'dojo/i18n', 'common-ui/uti
           var fireSubmit = true;
 
           var topValuesByParam = this._multiListBoxTopValuesByParam;
-          if (topValuesByParam) {
+          if(topValuesByParam) {
             delete this._multiListBoxTopValuesByParam;
           }
 
           var focusedParam = this._focusedParam;
-          if (focusedParam) {
+          if(focusedParam) {
             delete this._focusedParam;
           }
 
           var components = [];
 
-          var updateComponent = (function (component) {
+          var updateComponent = (function(component) {
             components.push(component);
 
             // Don't fire the submit on load if we have a submit button.
             // It will take care of firing this itself (based on auto-submit)
-            if (fireSubmit && component.promptType == 'submit') {
+            if(fireSubmit && component.promptType == "submit") {
               fireSubmit = false;
             }
 
-            if (!component.components && component.param && component.promptType === 'prompt') {
+            if(!component.components && component.param && component.promptType === "prompt") {
               var name = component.param.name;
-              if (focusedParam && focusedParam === name) {
+              if(focusedParam && focusedParam === name) {
                 focusedParam = null;
                 component.autoFocus = true;
               }
 
-              if (topValuesByParam && component.type === 'SelectMultiComponent') {
-                var topValue = topValuesByParam['_' + name];
-                if (topValue != null) {
+              if(topValuesByParam && component.type === "SelectMultiComponent") {
+                var topValue = topValuesByParam["_" + name];
+                if(topValue != null) {
                   component.autoTopValue = topValue;
                 }
               }
-            } else if (topValuesByParam && component.type === 'ScrollingPromptPanelLayoutComponent') {
+            } else if(topValuesByParam && component.type === "ScrollingPromptPanelLayoutComponent") {
               // save prompt pane reference and scroll value to dummy component
-              var scrollValue = topValuesByParam['_' + component.name];
-              if (scrollValue != null) {
+              var scrollValue = topValuesByParam["_" + component.name];
+              if(scrollValue != null) {
                 var setScroll = function() {
                   var scrollElem = $("#" + component.htmlObject).children(".prompt-panel");
                   scrollElem.scrollTop(scrollValue.scrollTopValue);
                   scrollElem.children(".parameter-wrapper").scrollLeft(scrollValue.scrollLeftValue);
-                }
+                };
 
                 // restore last scroll position for prompt panel
-                if (!this.isRefresh) {
+                if(!this.isRefresh) {
                   this.dashboard.postInit(function() {
-                    if (scrollTopValue) {
+                    if(scrollTopValue) {
                       setScroll();
                       scrollValue = undefined;
                     }
@@ -1333,8 +1333,8 @@ define(['cdf/lib/Base', 'cdf/Logger', 'dojo/number', 'dojo/i18n', 'common-ui/uti
           }).bind(this);
 
           var paramDefn = this.getParamDefn();
-          if (!this.isRefresh && paramDefn.showParameterUI()) { // First time init
-            if (this.onBeforeRender) {
+          if(!this.isRefresh && paramDefn.showParameterUI()) { // First time init
+            if(this.onBeforeRender) {
               this.onBeforeRender();
             }
 
@@ -1346,10 +1346,10 @@ define(['cdf/lib/Base', 'cdf/Logger', 'dojo/number', 'dojo/i18n', 'common-ui/uti
             this.dashboard.addComponents(components);
             this.dashboard.init();
 
-            if (this.onAfterRender) {
+            if(this.onAfterRender) {
               this.onAfterRender();
             }
-          } else if (this.diff) { // Perform update when there are differences
+          } else if(this.diff) { // Perform update when there are differences
             this.update(this.diff);
 
             var layout = this.dashboard.getComponentByName("prompt" + this.guid);
@@ -1360,14 +1360,14 @@ define(['cdf/lib/Base', 'cdf/Logger', 'dojo/number', 'dojo/i18n', 'common-ui/uti
               if(!component) {
                 return;
               }
-              if (this.isForceRefresh) {
+              if(this.isForceRefresh) {
                 this.dashboard.updateComponent(component);
               }
               updateComponent(component);
             }).bind(this);
             _mapComponents(layout, updateCallback);
           } else { // Simple parameter value initialization
-            paramDefn.mapParameters(function (param) {
+            paramDefn.mapParameters(function(param) {
               // initialize parameter values regardless of whether we're showing the parameter or not
               this._initializeParameterValue(paramDefn, param);
             }, this);
@@ -1377,7 +1377,7 @@ define(['cdf/lib/Base', 'cdf/Logger', 'dojo/number', 'dojo/i18n', 'common-ui/uti
             fireSubmit = !noAutoAutoSubmit;
           }
 
-          if (this.forceSubmit || fireSubmit) {
+          if(this.forceSubmit || fireSubmit) {
             this.submit(this, {isInit: !this.isRefresh});
           }
 
@@ -1386,7 +1386,7 @@ define(['cdf/lib/Base', 'cdf/Logger', 'dojo/number', 'dojo/i18n', 'common-ui/uti
           this.forceSubmit = false;
           this.isForceRefresh = undefined;
 
-          if (this.onAfterUpdate) {
+          if(this.onAfterUpdate) {
             this.onAfterUpdate();
           }
         },
@@ -1397,8 +1397,8 @@ define(['cdf/lib/Base', 'cdf/Logger', 'dojo/number', 'dojo/i18n', 'common-ui/uti
          * @name PromptPanel#hide
          * @method
          */
-        hide: function () {
-          $('#' + this.destinationId).css('display', 'none');
+        hide: function() {
+          $("#" + this.destinationId).css("display", "none");
         },
 
         /**
@@ -1418,30 +1418,30 @@ define(['cdf/lib/Base', 'cdf/Logger', 'dojo/number', 'dojo/i18n', 'common-ui/uti
           // initialize parameter values regardless of whether we're showing the parameter or not
           this._initializeParameterValue(paramDefn, param);
 
-          //add the label widget
+          // add the label widget
           panelComponents.push(_createWidgetForLabel.call(this, param));
 
-          //add the error widgets
+          // add the error widgets
           var errors = paramDefn.errors[param.name];
-          if (errors) {
-            $.each(errors, function (i, e) {
+          if(errors) {
+            $.each(errors, function(i, e) {
               panelComponents.push(_createWidgetForErrorLabel.call(this, param, e));
             }.bind(this));
           }
 
-          //add the parameter widget
+          // add the parameter widget
           var widget = _createWidgetForParameter.call(this, param);
-          if (widget) {
+          if(widget) {
             panelComponents.push(widget);
           } else { // No widget created. Do not create a label or parameter panel
-            Logger.log( "No widget created, return");
+            Logger.log("No widget created, return");
             return undefined;
           }
 
           var panel = _createWidgetForParameterPanel.call(this, param, panelComponents);
 
-          if (errors && errors.length > 0) {
-            panel.cssClass = (panel.cssClass || '') + ' error';
+          if(errors && errors.length > 0) {
+            panel.cssClass = (panel.cssClass || "") + " error";
           }
 
           return panel;
@@ -1455,7 +1455,7 @@ define(['cdf/lib/Base', 'cdf/Logger', 'dojo/number', 'dojo/i18n', 'common-ui/uti
          * @returns {BaseComponent}
          */
         createWidgetForSubmitComponent: function() {
-          return _createWidget.call(this, {}, 'submit');
+          return _createWidget.call(this, {}, "submit");
         },
 
         /**
@@ -1465,15 +1465,15 @@ define(['cdf/lib/Base', 'cdf/Logger', 'dojo/number', 'dojo/i18n', 'common-ui/uti
          * @method
          * @returns {Array|BaseComponents}
          */
-        buildPanelComponents: function () {
+        buildPanelComponents: function() {
           var panelGroupComponents = [];
           var paramDefn = this.getParamDefn();
           // Create a composite panel of the correct layout type for each group
-          $.each(paramDefn.parameterGroups, function (i, group) {
+          $.each(paramDefn.parameterGroups, function(i, group) {
             var components = [];
             // Create a label and a CDF widget for each parameter
-            $.each(group.parameters, function (i, param) {
-              if (param.attributes['hidden'] == 'true') {
+            $.each(group.parameters, function(i, param) {
+              if(param.attributes["hidden"] == "true") {
                 // initialize parameter values regardless of whether we're showing the parameter or not
                 this._initializeParameterValue(paramDefn, param);
                 return;
@@ -1481,12 +1481,12 @@ define(['cdf/lib/Base', 'cdf/Logger', 'dojo/number', 'dojo/i18n', 'common-ui/uti
               components.push(this._buildPanelForParameter(param));
             }.bind(this));
 
-            if (components.length > 0) {
+            if(components.length > 0) {
               panelGroupComponents.push(_createWidgetForGroupPanel.call(this, group, components));
             }
           }.bind(this));
 
-          if (panelGroupComponents.length > 0) {
+          if(panelGroupComponents.length > 0) {
             panelGroupComponents.push(_createWidgetForSubmitPanel.call(this));
           }
 
@@ -1501,37 +1501,37 @@ define(['cdf/lib/Base', 'cdf/Logger', 'dojo/number', 'dojo/i18n', 'common-ui/uti
          * @param {Array|BaseComponent} components The list of components to be removed
          * @param {Boolean} postponeClear
          */
-        removeDashboardComponents: function (components, postponeClear) {
+        removeDashboardComponents: function(components, postponeClear) {
           var myself = this;
           // Traverse all embedded components to remove them
 
           var removed = [];
-          _mapComponentsList(components, function (component) {
+          _mapComponentsList(components, function(component) {
             var rc = myself.dashboard.removeComponent(component.name);
-            if (rc) {
+            if(rc) {
               removed.push(rc);
             }
           });
 
           // Remove references to each removed components parameter but leave the parameter so it may be reselected if it's reused by
           // another component
-          $.each(removed, function (i, component) {
+          $.each(removed, function(i, component) {
             // It would be wise to always call component.clear() here except that since Dashboards.init() schedules the components
             // to update() in a setTimeout(). To prevent that, we'll clear the removed components with the GarbageCollectorComponent
             // when we initialize the next set of components.
-            if (!postponeClear) {
-              if (component.remove) {
+            if(!postponeClear) {
+              if(component.remove) {
                 component.remove();
               } else {
                 component.clear();
               }
             }
 
-            if (component.parameter) {
+            if(component.parameter) {
               // Remove our parameter from any other listening components
-              $.each(myself.dashboard.components, function (i, comp) {
-                if ($.isArray(comp.listeners)) {
-                  comp.listeners = $.grep(comp.listeners, function (l) {
+              $.each(myself.dashboard.components, function(i, comp) {
+                if($.isArray(comp.listeners)) {
+                  comp.listeners = $.grep(comp.listeners, function(l) {
                     return l !== component.parameter;
                   });
                 }
@@ -1675,7 +1675,7 @@ define(['cdf/lib/Base', 'cdf/Logger', 'dojo/number', 'dojo/i18n', 'common-ui/uti
           _validateState(state, paramDefn);
 
           if(state.parametersChanged != null) {
-            if (this.onStateChanged != null && this.parametersChanged != state.parametersChanged ) {
+            if(this.onStateChanged != null && this.parametersChanged != state.parametersChanged) {
               this.onStateChanged("parametersChanged", this.parametersChanged, state.parametersChanged);
             }
             this.parametersChanged = state.parametersChanged;
