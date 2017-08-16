@@ -41,6 +41,9 @@ define(["cdf/lib/Base", "cdf/Logger", "dojo/number", "dojo/i18n", "common-ui/uti
         pentaho.common.Messages.addUrlBundle("prompting", CONTEXT_PATH + "i18n?plugin=common-ui&name=resources/web/prompting/messages/messages");
       }
 
+      var ERROR_MSG_POSITION_TOP = "top";
+      var ERROR_MSG_POSITION_BOTTOM = "bottom";
+
       var _STATE_CONSTANTS = {
         readOnlyProperties: ["promptNeeded", "paginate", "totalPages", "showParameterUI", "allowAutoSubmit"],
         msgs: {
@@ -298,6 +301,27 @@ define(["cdf/lib/Base", "cdf/Logger", "dojo/number", "dojo/i18n", "common-ui/uti
       };
 
       /**
+       * Finds the specific submit button component located on the parent panel component.
+       * @name _findSubmitBtnComponent
+       * @method
+       * @private
+       * @param {cdf.dashboard.Dashboard} dashboard The dashboard instance to search within for the submit component.
+       */
+      var _findSubmitBtnComponent = function(dashboard) {
+        var result = null;
+        if(dashboard && dashboard.components) {
+          for(var i = 0; i < dashboard.components.length; i++) {
+            if(dashboard.components[i].promptType === "submit" &&
+              dashboard.components[i].type === "SubmitPromptComponent") {
+              result = dashboard.components[i];
+              break;
+            }
+          }
+        }
+        return result;
+      };
+
+      /**
        * Finds error's components are located on the parent panel component
        * @name _findErrorComponents
        * @method
@@ -517,6 +541,9 @@ define(["cdf/lib/Base", "cdf/Logger", "dojo/number", "dojo/i18n", "common-ui/uti
           this.paramDiffer = new ParamDiff();
 
           this.widgetBuilder = WidgetBuilder;
+
+          this.errorMessagePosition = ERROR_MSG_POSITION_TOP;
+          this.isEnableSubmitButton = true;
         },
 
         /**
@@ -1125,19 +1152,20 @@ define(["cdf/lib/Base", "cdf/Logger", "dojo/number", "dojo/i18n", "common-ui/uti
 
             // add new errors components
             if(errors) {
-              // debugger;
               for(var errIndex in errors) {
                 var error = errors[errIndex];
                 var isExist = existingErrors.some(function(item) {
                   return item.label == error;
                 });
                 if(!isExist) {
-                  var errIndex = panel.components.length - 1;
+                  var errMsgIndex = panel.components.length - 1;
+                  if(this.errorMessagePosition === ERROR_MSG_POSITION_BOTTOM) {
+                    errMsgIndex++;
+                  }
                   var errorComponent = _createWidgetForErrorLabel.call(this, param, error);
                   this.dashboard.addComponent(errorComponent);
                   this.dashboard.updateComponent(errorComponent);
-
-                  panel.components.splice(this.paramDefn.showErrorsBelowInput ? errIndex + 1 : errIndex, 0, errorComponent);
+                  panel.components.splice(errMsgIndex, 0, errorComponent);
                 }
               }
             }
@@ -1641,7 +1669,7 @@ define(["cdf/lib/Base", "cdf/Logger", "dojo/number", "dojo/i18n", "common-ui/uti
         },
 
         /**
-         * Modifys a state of the prompting system.
+         * Modifies a state of the prompting system.
          *
          * @name PromptPanel#setState
          * @method
@@ -1684,6 +1712,47 @@ define(["cdf/lib/Base", "cdf/Logger", "dojo/number", "dojo/i18n", "common-ui/uti
           (state.autoSubmit != null) && this.setAutoSubmit(state.autoSubmit);
           (state.page != null) && (paramDefn.page = state.page);
           this.setParamDefn(paramDefn);
+        },
+
+        /**
+         * Sets an error label position in his panel component. Available values are "top" and "bottom". The "top"
+         * locates the error label between the title label and the input widget. The "bottom" locates the error label
+         * below the input widget. By default is used "top".
+         *
+         * @name PromptPanel#setErrorMessagePosition
+         * @method
+         * @param {String} position The position, top or bottom.
+         * @example
+         * promptPanel.setErrorMessagePosition("bottom");
+         */
+        setErrorMessagePosition: function(position) {
+          var errPos = ERROR_MSG_POSITION_TOP;
+          if(ERROR_MSG_POSITION_BOTTOM === position) {
+            errPos = ERROR_MSG_POSITION_BOTTOM;
+          }
+          this.errorMessagePosition = errPos;
+        },
+
+        /**
+         * Enables or disables a submit button in a submit panel. Checks if it's necessary change "disabled" attribute
+         * of the button and applies it to a submit button component in the dashboard.
+         *
+         * @name PromptPanel#setDisabledSubmitButton
+         * @method
+         * @param {Boolean} disabled The flag to enable (use `false` flag) or disable (use `true` flag) the submit
+         *   button.
+         * @example
+         * promptPanel.setDisabledSubmitButton(true);
+         */
+        setDisabledSubmitButton: function(disabled) {
+          var disabledFlag = Boolean(disabled);
+          if(this.isEnableSubmitButton === disabledFlag) {
+            var submitBtnComponent = _findSubmitBtnComponent.call(this, this.getDashboard());
+            if(submitBtnComponent) {
+              submitBtnComponent.setDisabledButton(disabledFlag);
+            }
+            this.isEnableSubmitButton = !disabledFlag;
+          }
         }
       });
 

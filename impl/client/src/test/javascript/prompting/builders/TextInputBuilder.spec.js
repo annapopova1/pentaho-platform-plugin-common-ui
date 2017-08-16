@@ -1,5 +1,5 @@
 /*!
- * Copyright 2010 - 2015 Pentaho Corporation.  All rights reserved.
+ * Copyright 2010 - 2017 Pentaho Corporation.  All rights reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,13 +14,17 @@
  * limitations under the License.
  *
  */
-define(['common-ui/prompting/builders/TextInputBuilder', 'dojo/number', 'common-ui/jquery-clean'], function(TextInputBuilder, DojoNumber, $) {
+define([
+  "common-ui/prompting/builders/TextInputBuilder",
+  "dojo/number",
+  "common-ui/jquery-clean"
+], function(TextInputBuilder, DojoNumber, $) {
 
   describe("TextInputBuilder", function() {
 
     var args = {
       promptPanel: {
-        generateWidgetGUID: function() { return "12345" },
+        generateWidgetGUID: function() { return "12345"; },
         getParameterName: function() { }
       },
       param:  {
@@ -35,13 +39,16 @@ define(['common-ui/prompting/builders/TextInputBuilder', 'dojo/number', 'common-
 
     beforeEach(function() {
       textInputBuilder = new TextInputBuilder();
-      spyOn(textInputBuilder, '_createFormatter').and.returnValue(null);
-      spyOn(textInputBuilder, '_createDataTransportFormatter').and.returnValue(null);
+      spyOn(textInputBuilder, "_createFormatter").and.returnValue(null);
+      spyOn(textInputBuilder, "_createDataTransportFormatter").and.returnValue(null);
 
       component = textInputBuilder.build(args);
+      expect(component.addClearIcon).not.toBeDefined();
+      expect(component.clearIconClassName).not.toBeDefined();
+      expect(component.refreshOnEveryKeyUp).not.toBeDefined();
 
-      ph = $('<div>').attr('id', component.htmlObject);
-      $('body').append(ph);
+      ph = $("<div>").attr("id", component.htmlObject);
+      $("body").append(ph);
     });
 
     afterEach(function() {
@@ -53,19 +60,19 @@ define(['common-ui/prompting/builders/TextInputBuilder', 'dojo/number', 'common-
     });
 
     it("should return a TextInputComponent", function() {
-      expect(component.type).toBe('TextInputComponent');
+      expect(component.type).toBe("TextInputComponent");
     });
 
     it("should set parameter on prechange", function() {
-      var parameterValue = 'test';
+      var parameterValue = "test";
       component.dashboard = {
         setParameter: function() { },
-        getParameterValue: function() { return parameterValue }
+        getParameterValue: function() { return parameterValue; }
       };
 
       component.update();
-      spyOn(component.dashboard, 'setParameter');
-      spyOn(DojoNumber, 'parse').and.callFake(function() { });
+      spyOn(component.dashboard, "setParameter");
+      spyOn(DojoNumber, "parse").and.callFake(function() { });
       component.preChange();
       expect(component.dashboard.setParameter).toHaveBeenCalled();
     });
@@ -73,53 +80,53 @@ define(['common-ui/prompting/builders/TextInputBuilder', 'dojo/number', 'common-
     it("should set element value with text parameter", function() {
       component.param.values = [
         {
-          label: 'param1',
+          label: "param1",
           selected: true
         }
       ];
-      var parameterValue = 'test';
+      var parameterValue = "test";
       component.dashboard = {
         setParameter: function() { },
-        getParameterValue: function() { return parameterValue }
+        getParameterValue: function() { return parameterValue; }
       };
 
       component.update();
-      spyOn($.fn, 'attr').and.callThrough();
+      spyOn($.fn, "val").and.callThrough();
       component.postExecution();
-      expect($.fn.attr).toHaveBeenCalled();
+      expect($.fn.val).toHaveBeenCalled();
     });
 
     it("should set element value with text parameter and no selected value", function() {
       component.param.values = [
         {
-          label: 'param1',
-          value: 'param1',
+          label: "param1",
+          value: "param1",
           selected: false
         }
       ];
-      var parameterValue = 'test';
+      var parameterValue = "test";
       component.dashboard = {
         setParameter: function() { },
-        getParameterValue: function() { return parameterValue }
+        getParameterValue: function() { return parameterValue; }
       };
 
       component.update();
-      spyOn($.fn, 'attr').and.callThrough();
+      spyOn($.fn, "val").and.callThrough();
       component.postExecution();
-      expect($.fn.attr).toHaveBeenCalled();
+      expect($.fn.val).toHaveBeenCalled();
     });
 
     it("should set element value with number parameter and with type defined", function() {
-      parameterLabel = '1234';
+      parameterLabel = "1234";
       component.param.values = [
         {
           label: parameterLabel,
           value: parameterLabel,
           selected: true,
-          type: 'java.lang.Integer'
+          type: "java.lang.Integer"
         }
       ];
-      var parameterValue = 'test';
+      var parameterValue = "test";
       component.dashboard = {
         setParameter: function() { },
         getParameterValue: function() { return parameterValue; }
@@ -127,14 +134,13 @@ define(['common-ui/prompting/builders/TextInputBuilder', 'dojo/number', 'common-
       spyOn(DojoNumber, "format").and.callFake(function(val) { return val; });
 
       component.update();
-      spyOn($.fn, 'attr').and.callThrough();
+      spyOn($.fn, "val").and.callThrough();
       component.postExecution();
-      expect($.fn.attr).toHaveBeenCalled();
-      expect($('input', ph).attr('value')).toBe(parameterLabel);
+      expect($.fn.val).toHaveBeenCalledWith("1234");
     });
 
     it("should set element value with number parameter and with type not defined", function() {
-      parameterLabel = '1234';
+      parameterLabel = "1234";
       component.param.values = [
         {
           label: parameterLabel,
@@ -142,19 +148,48 @@ define(['common-ui/prompting/builders/TextInputBuilder', 'dojo/number', 'common-
           selected: true
         }
       ];
-      var parameterValue = 'test';
+      var parameterValue = "test";
       component.dashboard = {
         setParameter: function() { },
         getParameterValue: function() { return parameterValue; }
       };
 
       component.update();
-      spyOn($.fn, 'attr').and.callThrough();
+      spyOn($.fn, "val").and.callThrough();
       component.postExecution();
-      expect($.fn.attr).toHaveBeenCalled();
-      expect($('input', ph).attr('value')).toBe(parameterLabel);
+      expect($.fn.val).toHaveBeenCalledWith("1234");
     });
 
-  });
+    it("should return cached text input component", function() {
+      var extendedArgs = {
+        promptPanel: {
+          generateWidgetGUID: function() { return "000"; },
+          getParameterName: function() { }
+        },
+        param: {
+          values: { },
+          attributes: {
+            addClearIcon: true,
+            clearIconClassName: "test-name",
+            refreshOnEveryKeyUp: true,
+            cacheComponent: true
+          }
+        }
+      };
+      component = textInputBuilder.build(extendedArgs);
+      expect(component.addClearIcon).toBe(true);
+      expect(component.clearIconClassName).toBe("test-name");
+      expect(component.refreshOnEveryKeyUp).toBe(true);
 
+      component.dashboard = {
+        setParameter: jasmine.createSpy("setP"),
+        components: [component]
+      };
+      spyOn(DojoNumber, "parse").and.callFake(function() { });
+      component.preChange();
+
+      var cachedComponent = textInputBuilder.build(extendedArgs);
+      expect(cachedComponent).toBe(component);
+    });
+  });
 });

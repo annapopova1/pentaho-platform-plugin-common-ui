@@ -1,5 +1,5 @@
 /*!
- * Copyright 2010 - 2015 Pentaho Corporation.  All rights reserved.
+ * Copyright 2010 - 2017 Pentaho Corporation.  All rights reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -61,9 +61,9 @@ define(["cdf/components/BaseComponent", "common-ui/jquery-clean"], function(Base
       if(!this.viewReportButtonRegistered) {
 
         var $container = $("#" + this.htmlObject).empty();
-        var disableButton = this.promptPanel.paramDefn.disableSubmitButton;
+        var disabledSubmitBtn = this.promptPanel && !this.promptPanel.isEnableSubmitButton;
 
-        $("<button type='button' class='pentaho-button' " + (disableButton ? "disabled" : "") + "/>")
+        $("<button type='button' class='pentaho-button' " + (disabledSubmitBtn ? "disabled" : "") + "/>")
           .text(this.label)
           .bind("mousedown", this.expressionStart.bind(this)).bind("click", function() {
             // Don't let click-event go as first argument.
@@ -89,6 +89,18 @@ define(["cdf/components/BaseComponent", "common-ui/jquery-clean"], function(Base
      * @method
      */
     expressionStart: function() {
+    },
+
+    /**
+     * Sets `disabled` attribute of the submit button.
+     * Can be called by Prompting API to enable/disable the submit button for example, for validation purpose.
+     *
+     * @name ScopedPentahoButtonComponent#setDisabledButton
+     * @method
+     * @param {boolean} disabled The flag to enable (use `false` flag) or disable (use `true` flag) the submit button.
+     */
+    setDisabledButton: function(disabled) {
+      $("#" + this.name).find("button.pentaho-button").attr("disabled", disabled);
     }
   });
 });
